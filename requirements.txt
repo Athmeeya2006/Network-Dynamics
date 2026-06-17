@@ -1,0 +1,6 @@
+matplotlib
+manim
+networkx
+numpy
+plotly
+scipy
