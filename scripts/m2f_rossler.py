@@ -121,13 +121,13 @@ ax_ret.set_title('Poincare Return Map', fontsize=12, color=NAVY,
                  fontweight='bold')
 ax_ret.legend(fontsize=10, framealpha=0.95, facecolor='white', edgecolor=SLATE)
 
-fig.suptitle('Module 2f — Rossler System: Period-Doubling Cascade',
+fig.suptitle('Module 2f - Rossler System: Period-Doubling Cascade',
              fontsize=15, color=NAVY, fontweight='bold', y=1.01)
 plt.tight_layout()
 
 # ── VERIFY ───────────────────────────────────────────────────────────────────
 print("=" * 65)
-print("VERIFY — Rossler period-doubling cascade:")
+print("VERIFY - Rossler period-doubling cascade:")
 print("  c ~ 2.8-4: period-1 orbit")
 print("  c ~ 4-5:   period-2 orbit")
 print("  c ~ 5-5.7: period-4 / chaos onset")

@@ -114,7 +114,7 @@ for b, v, e in zip(bars, [ALPHA_TRUE, alpha_mle, alpha_ols], [0, err_mle, err_ol
     ax2.text(b.get_x() + b.get_width() / 2, v + 0.05, lbl, ha='center',
              va='bottom', fontsize=10, color=NAVY)
 
-fig.suptitle('Module 4d — Clauset MLE recovers the exponent; OLS is biased',
+fig.suptitle('Module 4d - Clauset MLE recovers the exponent; OLS is biased',
              fontsize=16, color=NAVY, fontweight='bold', y=1.0)
 plt.tight_layout()
 
@@ -123,7 +123,7 @@ ok_mle = err_mle < 0.05
 ok_bias = err_ols > err_mle
 ok_p = pval > 0.1
 print("=" * 70)
-print("VERIFY — Clauset MLE vs OLS on synthetic power law:")
+print("VERIFY - Clauset MLE vs OLS on synthetic power law:")
 print(f"  true alpha          = {ALPHA_TRUE:.3f}")
 print(f"  MLE  alpha          = {alpha_mle:.3f}  (err {err_mle:.3f}, <0.05) "
       f"{'PASS' if ok_mle else 'FAIL'}")

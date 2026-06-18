@@ -78,14 +78,14 @@ ax2.set_title(f'Random simplicial complex (N=300)\n'
               rf'$\langle k\rangle\approx10$, $\langle k_\Delta\rangle\approx8$',
               color=NAVY, fontweight='bold')
 
-fig.suptitle('Module 6a — Simplicial complexes: promoting triangles to 2-simplices',
+fig.suptitle('Module 6a - Simplicial complexes: promoting triangles to 2-simplices',
              fontsize=16, color=NAVY, fontweight='bold', y=1.0)
 plt.tight_layout()
 
 # ── VERIFY ────────────────────────────────────────────────────────────────────
 ok = (len(tris_small) == nx_tri)
 print("=" * 70)
-print("VERIFY — clique complex triangle enumeration:")
+print("VERIFY - clique complex triangle enumeration:")
 print(f"  src.simplicial.triangles count = {len(tris_small)}")
 print(f"  independent networkx count     = {nx_tri}")
 print(f"  Euler characteristic chi = V - E + F = {counts_small[0]} - "

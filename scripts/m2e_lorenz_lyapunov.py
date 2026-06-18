@@ -121,13 +121,13 @@ ax.text(0.05, 0.95, info, transform=ax.transAxes, fontsize=10,
         bbox=dict(boxstyle='round,pad=0.5', facecolor='white',
                   edgecolor=SLATE, alpha=0.9))
 
-fig.suptitle('Module 2e — Lorenz System: Lyapunov Analysis',
+fig.suptitle('Module 2e - Lorenz System: Lyapunov Analysis',
              fontsize=15, color=NAVY, fontweight='bold', y=1.02)
 plt.tight_layout()
 
 # ── VERIFY ───────────────────────────────────────────────────────────────────
 print("=" * 65)
-print("VERIFY — Lorenz Lyapunov spectrum:")
+print("VERIFY - Lorenz Lyapunov spectrum:")
 print(f"  lambda_max:  measured = {spectrum[0]:.4f},  theory ~ 0.906")
 print(f"  Sum:         measured = {np.sum(spectrum):.4f},  "
       f"theory = {theory_sum:.4f}")

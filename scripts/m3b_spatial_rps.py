@@ -21,7 +21,7 @@ Proof verified:
           (homogenisation) at high M.
 
     [Note: the naive "high-M => single survivor in finite time" claim is not
-     robustly reproducible with this rate-based lattice model — extinction by
+     robustly reproducible with this rate-based lattice model - extinction by
      drift on a large lattice is astronomically slow, and small lattices show
      reversed finite-size physics. The homogenisation order parameter S(M) is
      the correct, robust, monotone signature of the same transition.]
@@ -138,7 +138,7 @@ ax.set_title('Homogenisation transition: $S(M)$ collapses',
              color=NAVY, fontweight='bold')
 ax.legend(fontsize=10, framealpha=0.95, facecolor='white', edgecolor=SLATE)
 
-fig.suptitle('Module 3b — Spatial Rock-Paper-Scissors: spirals, coexistence, and homogenisation',
+fig.suptitle('Module 3b - Spatial Rock-Paper-Scissors: spirals, coexistence, and homogenisation',
              fontsize=16, color=NAVY, fontweight='bold', y=1.0)
 plt.tight_layout()
 
@@ -150,7 +150,7 @@ collapse = S_mean[-1] < 0.05
 coexist = (survivors_low == 3) and (S_low > 0.25)
 
 print("=" * 70)
-print("VERIFY — Spatial RPS homogenisation transition:")
+print("VERIFY - Spatial RPS homogenisation transition:")
 print(f"  (1) Low mobility M={M_low}: survivors={survivors_low} (exp 3), "
       f"S_low={S_low:.3f} (>0.25)  -> {'PASS' if coexist else 'FAIL'}")
 print("  (2) Structure order parameter S(M):")

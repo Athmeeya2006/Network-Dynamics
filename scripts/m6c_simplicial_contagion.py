@@ -92,7 +92,7 @@ ax1.plot(betas, dn_p, 's-', color=TEAL, lw=2, ms=5, mfc='white', mec=TEAL, mew=1
 ax1.axvline(beta_c, color=SLATE, ls=':', lw=1.4, alpha=0.8, label=rf'$\beta_c\approx{beta_c:.3f}$')
 ax1.set_xlabel(r'Pairwise infection rate $\beta$', color=NAVY)
 ax1.set_ylabel(r'Stationary infected fraction $\rho^*$', color=NAVY)
-ax1.set_title(rf'Pairwise only ($\beta_\Delta=0$) — CONTINUOUS'
+ax1.set_title(rf'Pairwise only ($\beta_\Delta=0$) - CONTINUOUS'
               f'\nhysteresis area = {area_p:.4f}', color=NAVY, fontweight='bold')
 ax1.legend(fontsize=10, framealpha=0.95, facecolor='white', edgecolor=SLATE, loc='upper left')
 
@@ -103,12 +103,12 @@ ax2.plot(betas, dn_h, 's-', color=TEAL, lw=2, ms=5, mfc='white', mec=TEAL, mew=1
          label='backward (seed 95%)')
 ax2.fill_between(betas, up_h, dn_h, color=GOLD, alpha=0.28, label='bistable region')
 ax2.set_xlabel(r'Pairwise infection rate $\beta$', color=NAVY)
-ax2.set_title(rf'With triadic channel ($\beta_\Delta=0.4$) — DISCONTINUOUS'
+ax2.set_title(rf'With triadic channel ($\beta_\Delta=0.4$) - DISCONTINUOUS'
               f'\nhysteresis area = {area_h:.4f}', color=NAVY, fontweight='bold')
 ax2.legend(fontsize=10, framealpha=0.95, facecolor='white', edgecolor=SLATE, loc='upper left')
 ax2.set_ylim(-0.02, 0.85)
 
-fig.suptitle('Module 6c — Simplicial contagion: the triadic channel turns the epidemic '
+fig.suptitle('Module 6c - Simplicial contagion: the triadic channel turns the epidemic '
              'transition first-order (cf. the ER repo pairwise SIR baseline)',
              fontsize=14, color=NAVY, fontweight='bold', y=1.0)
 plt.tight_layout()
@@ -116,7 +116,7 @@ plt.tight_layout()
 # ── VERIFY ────────────────────────────────────────────────────────────────────
 ok = (jump_h > 0.3) and (area_h > 5 * max(area_p, 1e-4))
 print("=" * 70)
-print("VERIFY — simplicial contagion (first-order + bistability):")
+print("VERIFY - simplicial contagion (first-order + bistability):")
 print(f"  pairwise (beta_D=0):   hysteresis area = {area_p:.4f}, max jump = {jump_p:.3f}")
 print(f"  triadic  (beta_D=0.4): hysteresis area = {area_h:.4f}, max jump = {jump_h:.3f}")
 print(f"  triadic transition is discontinuous + bistable: {'PASS' if ok else 'FAIL'}")

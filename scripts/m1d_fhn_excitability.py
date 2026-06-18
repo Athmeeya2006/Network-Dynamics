@@ -78,12 +78,12 @@ for col, (name, params, color) in enumerate([
                   fontweight='bold')
     ax2.legend(fontsize=9, framealpha=0.95, facecolor='white', edgecolor=SLATE)
 
-fig.suptitle('Module 1d — FitzHugh-Nagumo Excitability',
+fig.suptitle('Module 1d - FitzHugh-Nagumo Excitability',
              fontsize=15, color=NAVY, fontweight='bold', y=1.01)
 plt.tight_layout()
 
 print("=" * 65)
-print("VERIFY — FitzHugh-Nagumo Hopf boundary:")
+print("VERIFY - FitzHugh-Nagumo Hopf boundary:")
 for I_val, expected in [(0.3, 'excitable'), (0.5, 'oscillatory')]:
     fhn_v = FitzHughNagumo(a=0.7, b=0.8, tau=12.5, I=I_val)
 

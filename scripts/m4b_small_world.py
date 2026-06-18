@@ -73,7 +73,7 @@ if np.any(sw_mask):
 
 ax.set_xlabel('Rewiring probability $p$', color=NAVY)
 ax.set_ylabel('Normalised quantity', color=NAVY)
-ax.set_title('Module 4b — Watts-Strogatz small-world transition\n'
+ax.set_title('Module 4b - Watts-Strogatz small-world transition\n'
              rf'$N={N}$, $k={k}$, {n_realizations} realisations per $p$',
              color=NAVY, fontweight='bold')
 ax.legend(fontsize=11, framealpha=0.95, facecolor='white', edgecolor=SLATE, loc='center left')
@@ -86,7 +86,7 @@ if ok:
     p_lo, p_hi = p_values[idx.min()], p_values[idx.max()]
     sample = idx[len(idx) // 2]
 print("=" * 70)
-print("VERIFY — small-world window (L collapsed, C retained):")
+print("VERIFY - small-world window (L collapsed, C retained):")
 if ok:
     print(f"  window: p in [{p_lo:.1e}, {p_hi:.1e}]")
     print(f"  e.g. p={p_values[sample]:.1e}: "

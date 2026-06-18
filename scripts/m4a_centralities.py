@@ -11,7 +11,7 @@ Proof verified:
     centralities are less tightly coupled.
 
     VERIFY: Pearson correlation r(degree, eigenvector) is larger on BA than on
-    ER (r_BA > r_ER, with r_BA > 0.8) — hub localisation strengthens the link.
+    ER (r_BA > r_ER, with r_BA > 0.8) - hub localisation strengthens the link.
 
 Output: media/figures/m4a_centralities.png
 """
@@ -67,7 +67,7 @@ for j, (cname, cmap) in enumerate(zip(names, cmaps)):
     sc = nx.draw_networkx_nodes(G_ba, pos_ba, ax=ax, node_color=vals,
                                 cmap=cmap, node_size=sizes, linewidths=0.4,
                                 edgecolors='white')
-    ax.set_title(f'BA — {cname}', color=NAVY, fontweight='bold', fontsize=12)
+    ax.set_title(f'BA - {cname}', color=NAVY, fontweight='bold', fontsize=12)
     ax.axis('off')
     fig.colorbar(sc, ax=ax, fraction=0.046, pad=0.02)
 
@@ -109,13 +109,13 @@ ax.set_ylabel('Eigenvector centrality', color=NAVY)
 ax.set_title('Degree vs eigenvector centrality', color=NAVY, fontweight='bold')
 ax.legend(fontsize=10, framealpha=0.95, facecolor='white', edgecolor=SLATE)
 
-fig.suptitle('Module 4a — Centralities: hub localisation on scale-free vs homogeneous graphs',
+fig.suptitle('Module 4a - Centralities: hub localisation on scale-free vs homogeneous graphs',
              fontsize=16, color=NAVY, fontweight='bold', y=0.98)
 
 # ── VERIFY ────────────────────────────────────────────────────────────────────
 ok = (r_ba > r_er) and (r_ba > 0.8)
 print("=" * 70)
-print("VERIFY — degree vs eigenvector centrality correlation:")
+print("VERIFY - degree vs eigenvector centrality correlation:")
 print(f"  Erdos-Renyi:     r(degree, eigenvector) = {r_er:.4f}")
 print(f"  Barabasi-Albert: r(degree, eigenvector) = {r_ba:.4f}")
 print(f"  Hub localisation (r_BA > r_ER and r_BA > 0.8): {'PASS' if ok else 'FAIL'}")

@@ -92,14 +92,14 @@ ax3.text(0.05, 0.95, info, transform=ax3.transAxes, fontsize=9,
          bbox=dict(boxstyle='round,pad=0.5', facecolor='white',
                    edgecolor=SLATE, alpha=0.9))
 
-fig.suptitle('Module 2d — Lorenz System',
+fig.suptitle('Module 2d - Lorenz System',
              fontsize=15, color=NAVY, fontweight='bold', y=1.01)
 plt.tight_layout()
 
 # ── VERIFY: Hopf threshold ──────────────────────────────────────────────────
 rho_H = lorenz_hopf_rho(sigma, beta)
 print("=" * 65)
-print("VERIFY — Lorenz Hopf bifurcation threshold:")
+print("VERIFY - Lorenz Hopf bifurcation threshold:")
 print(f"  Theory:  rho_H = sigma*(sigma+beta+3)/(sigma-beta-1)")
 print(f"           rho_H = {sigma}*({sigma}+{beta:.4f}+3)/({sigma}-{beta:.4f}-1)")
 print(f"           rho_H = {rho_H:.4f}")

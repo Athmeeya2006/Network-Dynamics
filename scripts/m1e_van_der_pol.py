@@ -124,7 +124,7 @@ ax.set_title(r'Relaxation Oscillation ($\mu = 10$)', fontsize=12,
 ax.set_xlim(-3, 3)
 ax.set_ylim(-15, 15)
 
-fig.suptitle('Module 1e — Van der Pol Oscillator',
+fig.suptitle('Module 1e - Van der Pol Oscillator',
              fontsize=15, color=NAVY, fontweight='bold', y=1.01)
 plt.tight_layout()
 
@@ -139,7 +139,7 @@ if np.sum(valid) >= 3:
     slope = coeffs[0]
     theory_slope = 3.0 - 2.0 * np.log(2)
     print("=" * 65)
-    print("VERIFY — Van der Pol period scaling (relaxation limit):")
+    print("VERIFY - Van der Pol period scaling (relaxation limit):")
     print(f"  Theory:   slope = 3 - 2*ln(2) = {theory_slope:.4f}")
     print(f"  Measured: slope = {slope:.4f}")
     print(f"  Error:    {abs(slope - theory_slope):.4f}")

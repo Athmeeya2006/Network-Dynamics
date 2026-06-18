@@ -1,7 +1,7 @@
 """
 m1c_hopf_stuart_landau.py
 =========================
-Module 1c — Supercritical Hopf bifurcation via the Stuart-Landau normal form.
+Module 1c - Supercritical Hopf bifurcation via the Stuart-Landau normal form.
 
 Proof verified:
     The Stuart-Landau oscillator z_dot = (mu + i*omega) z - |z|^2 z
@@ -126,7 +126,7 @@ ax2.set_ylim(-lim, lim)
 ax2.axhline(0, color=SLATE, lw=0.5, ls=':')
 ax2.axvline(0, color=SLATE, lw=0.5, ls=':')
 
-fig.suptitle('Module 1c — Hopf Bifurcation and the Stuart-Landau Oscillator',
+fig.suptitle('Module 1c - Hopf Bifurcation and the Stuart-Landau Oscillator',
              fontsize=15, color=NAVY, fontweight='bold', y=1.01)
 plt.tight_layout()
 
@@ -140,7 +140,7 @@ coeffs = np.polyfit(log_mu, log_amp, 1)
 exponent = coeffs[0]
 
 print("=" * 65)
-print("VERIFY — Hopf bifurcation amplitude scaling:")
+print("VERIFY - Hopf bifurcation amplitude scaling:")
 print(f"  Theory:   exponent = 0.5000  (amplitude ∝ sqrt(mu))")
 print(f"  Measured: exponent = {exponent:.4f}")
 print(f"  Error:    {abs(exponent - 0.5):.6f}")

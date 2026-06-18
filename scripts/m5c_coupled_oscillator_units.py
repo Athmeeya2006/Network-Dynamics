@@ -19,7 +19,7 @@ Proof verified:
 
     VERIFY: the time-averaged oscillation amplitude of the Stuart-Landau
     ensemble drops below 0.05 in an intermediate coupling window, while the
-    uncoupled (K=0) amplitude exceeds 0.5 — i.e. an amplitude-death region
+    uncoupled (K=0) amplitude exceeds 0.5 - i.e. an amplitude-death region
     exists.
 
 Output: media/figures/m5c_coupled_oscillator_units.png
@@ -98,7 +98,7 @@ im = ax.imshow(V.T, aspect='auto', origin='lower', cmap='magma',
                extent=[0, t_fhn[-1], 0, N_chain])
 ax.set_xlabel('Time', color=NAVY)
 ax.set_ylabel('Chain position $i$', color=NAVY)
-ax.set_title(f'(A) Coupled FitzHugh-Nagumo chain — travelling wave '
+ax.set_title(f'(A) Coupled FitzHugh-Nagumo chain - travelling wave '
              f'(speed ~ {speed:.2f} nodes/time)', color=NAVY, fontweight='bold')
 cb = fig.colorbar(im, ax=ax, fraction=0.025, pad=0.01)
 cb.set_label('$v$ (voltage)', color=NAVY)
@@ -123,17 +123,17 @@ if np.any(death_mask):
                color=SLATE, alpha=0.18, label='amplitude-death window')
 ax.set_xlabel('Coupling $K$', color=NAVY)
 ax.set_ylabel('Mean oscillation amplitude', color=NAVY)
-ax.set_title('(B) Coupled Stuart-Landau — amplitude death', color=NAVY, fontweight='bold')
+ax.set_title('(B) Coupled Stuart-Landau - amplitude death', color=NAVY, fontweight='bold')
 ax.legend(fontsize=9, framealpha=0.95, facecolor='white', edgecolor=SLATE)
 
-fig.suptitle('Module 5c — Module-1 units on a network: travelling waves & amplitude death',
+fig.suptitle('Module 5c - Module-1 units on a network: travelling waves & amplitude death',
              fontsize=16, color=NAVY, fontweight='bold', y=0.98)
 
 # ── VERIFY ────────────────────────────────────────────────────────────────────
 death_exists = np.any(death_mask) and amp0 > 0.5
 ok = death_exists and front_monotone
 print("=" * 70)
-print("VERIFY — composability: coupled Module-1 units on a graph:")
+print("VERIFY - composability: coupled Module-1 units on a graph:")
 print(f"  (A) FHN travelling wave: monotone front = {front_monotone}, "
       f"speed ~ {speed:.3f} nodes/time")
 print(f"  (B) Stuart-Landau amplitude death:")

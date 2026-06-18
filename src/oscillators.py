@@ -17,9 +17,9 @@ PRIME DIRECTIVE (composability):
     before Module 5 begins.
 
 Classes:
-    FitzHughNagumo  — excitable / oscillatory neuron model (dim=2)
-    StuartLandau    — Hopf normal form (dim=2)
-    VanDerPol       — canonical relaxation oscillator (dim=2)
+    FitzHughNagumo  - excitable / oscillatory neuron model (dim=2)
+    StuartLandau    - Hopf normal form (dim=2)
+    VanDerPol       - canonical relaxation oscillator (dim=2)
 """
 
 from __future__ import annotations

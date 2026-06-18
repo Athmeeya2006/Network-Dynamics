@@ -9,7 +9,7 @@ Proof verified (Skardal & Arenas 2019/2020):
                             + (K2/N^2) sum_{j,k} sin(2 theta_j - theta_k - theta_i),
     turns the continuous synchronisation transition into an ABRUPT
     (explosive) one with a bistable region and a hysteresis loop between the
-    forward and backward sweeps of the coupling K1 — and crucially this
+    forward and backward sweeps of the coupling K1 - and crucially this
     happens with random frequencies, WITHOUT any degree-frequency correlation
     (contrast with Module 5d, where the correlation was required).
 
@@ -74,7 +74,7 @@ ax1.plot(K1_values, rd_p, 's-', color=TEAL, lw=2, ms=5, mfc='white', mec=TEAL,
 ax1.fill_between(K1_values, ru_p, rd_p, color=GOLD, alpha=0.25)
 ax1.set_xlabel('Pairwise coupling $K_1$', color=NAVY)
 ax1.set_ylabel('Order parameter $r$', color=NAVY)
-ax1.set_title(rf'Pairwise only ($K_2=0$) — CONTINUOUS'
+ax1.set_title(rf'Pairwise only ($K_2=0$) - CONTINUOUS'
               f'\nhysteresis area = {area_p:.3f}', color=NAVY, fontweight='bold')
 ax1.legend(fontsize=10, framealpha=0.95, facecolor='white', edgecolor=SLATE, loc='upper left')
 
@@ -85,12 +85,12 @@ ax2.plot(K1_values, rd_h, 's-', color=TEAL, lw=2, ms=5, mfc='white', mec=TEAL,
          mew=1.4, label='backward (decreasing $K_1$)')
 ax2.fill_between(K1_values, ru_h, rd_h, color=GOLD, alpha=0.25, label='bistable region')
 ax2.set_xlabel('Pairwise coupling $K_1$', color=NAVY)
-ax2.set_title(rf'With 2-simplex coupling ($K_2=10$) — EXPLOSIVE'
+ax2.set_title(rf'With 2-simplex coupling ($K_2=10$) - EXPLOSIVE'
               f'\nhysteresis area = {area_h:.3f}', color=NAVY, fontweight='bold')
 ax2.legend(fontsize=10, framealpha=0.95, facecolor='white', edgecolor=SLATE, loc='upper left')
 ax2.set_ylim(-0.02, 1.0)
 
-fig.suptitle('Module 6b — Higher-order Kuramoto: triadic coupling makes synchronisation '
+fig.suptitle('Module 6b - Higher-order Kuramoto: triadic coupling makes synchronisation '
              'explosive (no degree-frequency correlation needed)',
              fontsize=14.5, color=NAVY, fontweight='bold', y=1.0)
 plt.tight_layout()
@@ -98,7 +98,7 @@ plt.tight_layout()
 # ── VERIFY ────────────────────────────────────────────────────────────────────
 ok = (area_h > 0.3) and (jump_h > 0.3) and (area_p < area_h / 3)
 print("=" * 70)
-print("VERIFY — higher-order (triadic) coupling induces explosive sync:")
+print("VERIFY - higher-order (triadic) coupling induces explosive sync:")
 print(f"  pairwise (K2=0):  hysteresis area = {area_p:.4f}, max jump = {jump_p:.3f}")
 print(f"  triadic  (K2=10): hysteresis area = {area_h:.4f}, max jump = {jump_h:.3f}")
 print(f"  triadic term induces abrupt transition + bistability: "

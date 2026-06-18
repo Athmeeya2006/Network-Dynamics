@@ -123,7 +123,7 @@ ax.set_ylabel('Count of runs', color=NAVY)
 ax.set_title('Per-run outcomes cluster near fixation', color=NAVY, fontweight='bold')
 ax.legend(fontsize=9, framealpha=0.95, facecolor='white', edgecolor=SLATE)
 
-fig.suptitle('Module 3c — Rock-Paper-Scissors on Networks: per-run fixation, ensemble symmetry',
+fig.suptitle('Module 3c - Rock-Paper-Scissors on Networks: per-run fixation, ensemble symmetry',
              fontsize=16, color=NAVY, fontweight='bold', y=1.0)
 plt.tight_layout()
 
@@ -135,7 +135,7 @@ fix_ok = dom_er[-1] > 0.9 and dom_ba[-1] > 0.9
 ba_faster = dom_ba[-1] >= dom_er[-1] - 1e-9
 
 print("=" * 70)
-print(f"VERIFY — RPS imitation dynamics on networks ({n_runs} runs each):")
+print(f"VERIFY - RPS imitation dynamics on networks ({n_runs} runs each):")
 print("  (1) Ensemble-mean final fractions  -> Nash (1/3, 1/3, 1/3):")
 print(f"      ER: Rock {final_er[0]:.4f}, Paper {final_er[1]:.4f}, "
       f"Scissors {final_er[2]:.4f}  (max dev {err_er.max():.4f})")

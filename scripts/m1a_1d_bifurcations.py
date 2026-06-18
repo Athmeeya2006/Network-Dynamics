@@ -1,7 +1,7 @@
 """
 m1a_1d_bifurcations.py
 ======================
-Module 1a — One-dimensional bifurcations of flows on a line.
+Module 1a - One-dimensional bifurcations of flows on a line.
 
 Proof verified:
     Near the supercritical pitchfork bifurcation x_dot = r*x - x^3,
@@ -115,7 +115,7 @@ ax.legend(handles=legend_elements, fontsize=10, framealpha=0.95,
 ax = axes[1, 1]
 apply_axes_style(ax)
 # Branch x* = 0: unstable for r > 0, stable for r < 0
-# Wait — subcritical: x_dot = rx + x^3
+# Wait - subcritical: x_dot = rx + x^3
 # f'(0) = r, so x*=0 stable when r < 0, unstable when r > 0
 # x* = ±sqrt(-r) for r < 0, and f'(x*) = r + 3x*^2 = r + 3(-r) = -2r > 0 → unstable
 ax.plot(r_pf[r_pf <= 0], np.zeros(np.sum(r_pf <= 0)), '-', color=TEAL, lw=2.5)
@@ -135,7 +135,7 @@ ax.axvline(0, color=SLATE, lw=0.5, ls=':')
 ax.legend(handles=legend_elements, fontsize=10, framealpha=0.95,
           facecolor='white', edgecolor=SLATE)
 
-fig.suptitle('Module 1a — One-Dimensional Bifurcations of Flows on a Line',
+fig.suptitle('Module 1a - One-Dimensional Bifurcations of Flows on a Line',
              fontsize=15, color=NAVY, fontweight='bold', y=1.01)
 plt.tight_layout()
 
@@ -147,7 +147,7 @@ log_x = np.log(x_star)
 coeffs = np.polyfit(log_r, log_x, 1)
 exponent = coeffs[0]
 print("=" * 65)
-print("VERIFY — Supercritical pitchfork critical exponent:")
+print("VERIFY - Supercritical pitchfork critical exponent:")
 print(f"  Theory:   beta = 0.5000")
 print(f"  Measured: beta = {exponent:.4f}")
 print(f"  Error:    {abs(exponent - 0.5):.6f}")

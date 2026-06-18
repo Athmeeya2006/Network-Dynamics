@@ -98,13 +98,13 @@ ax.set_title('Phase distributions', color=NAVY, fontweight='bold', pad=18)
 ax.legend(fontsize=8.5, loc='upper right', bbox_to_anchor=(1.18, 1.12),
           framealpha=0.95, facecolor='white', edgecolor=SLATE)
 
-fig.suptitle('Module 5a — Kuramoto mean-field model: critical coupling $K_c = 2/(\\pi g(0))$',
+fig.suptitle('Module 5a - Kuramoto mean-field model: critical coupling $K_c = 2/(\\pi g(0))$',
              fontsize=15, color=NAVY, fontweight='bold', y=1.0)
 
 # ── VERIFY ────────────────────────────────────────────────────────────────────
 ok = err < 0.05
 print("=" * 70)
-print("VERIFY — Kuramoto critical coupling:")
+print("VERIFY - Kuramoto critical coupling:")
 print(f"  predicted K_c = 2/(pi g(0)) = 2 gamma = {Kc_pred:.4f}")
 print(f"  fitted    K_c (from r^2 = 1 - K_c/K) = {Kc_fit:.4f}")
 print(f"  relative error = {err * 100:.2f}%  (< 5%)")

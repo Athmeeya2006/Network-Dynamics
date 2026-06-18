@@ -1,7 +1,7 @@
 """
 m1b_2d_phase_plane.py
 =====================
-Module 1b — Phase portraits and fixed-point classification in 2D.
+Module 1b - Phase portraits and fixed-point classification in 2D.
 
 Proof verified:
     The trace-determinant classification of 2D linear systems matches
@@ -131,7 +131,7 @@ order = ['Stable Node', 'Unstable Node', 'Stable Spiral',
          'Unstable Spiral', 'Center', 'Saddle Point']
 
 print("=" * 65)
-print("VERIFY — 2D fixed-point classification:")
+print("VERIFY - 2D fixed-point classification:")
 
 for idx, name in enumerate(order):
     sys_info = systems[name]

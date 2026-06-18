@@ -77,7 +77,7 @@ ax_zoom.set_title('Zoom: Self-Similarity', fontsize=12, color=NAVY,
                   fontweight='bold')
 ax_zoom.set_xlim(3.4, 3.6)
 
-fig.suptitle('Module 2b — Period-Doubling Cascade and Feigenbaum Constants',
+fig.suptitle('Module 2b - Period-Doubling Cascade and Feigenbaum Constants',
              fontsize=15, color=NAVY, fontweight='bold', y=1.01)
 plt.tight_layout()
 
@@ -94,7 +94,7 @@ r_thresholds = [
 ]
 
 print("=" * 65)
-print("VERIFY — Feigenbaum delta (period-doubling ratio):")
+print("VERIFY - Feigenbaum delta (period-doubling ratio):")
 print(f"  {'n':>3s}  {'r_n':>12s}  {'delta_n':>12s}")
 deltas = []
 for i in range(2, len(r_thresholds)):
@@ -109,7 +109,7 @@ print(f"  Error:    {abs(deltas[-1] - 4.6692):.4f}")
 # ── VERIFY: Feigenbaum alpha ─────────────────────────────────────────────────
 # d_n = f^{2^{n-1}}(0.5, r_ss_n) - 0.5  at the superstable parameter
 # alpha = d_n / d_{n+1} -> 2.5029
-print("\nVERIFY — Feigenbaum alpha (branch spacing ratio):")
+print("\nVERIFY - Feigenbaum alpha (branch spacing ratio):")
 from src.maps import find_superstable_r
 
 r_ss = []

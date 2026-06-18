@@ -100,7 +100,7 @@ for idx, (eps, title, color) in enumerate(cases):
     ax.set_xlim(-0.15, 1.15)
     ax.set_ylim(-0.1, 1.0)
 
-fig.suptitle('Module 3a — Rock-Paper-Scissors Replicator Dynamics on the Simplex',
+fig.suptitle('Module 3a - Rock-Paper-Scissors Replicator Dynamics on the Simplex',
              fontsize=16, color=NAVY, fontweight='bold', y=0.98)
 plt.tight_layout()
 
@@ -117,7 +117,7 @@ delta_stable = V_stable[-1] - V_stable[0]
 delta_unstable = V_unstable[-1] - V_unstable[0]
 
 print("=" * 65)
-print("VERIFY — Replicator RPS Conservation of V = x_1*x_2*x_3:")
+print("VERIFY - Replicator RPS Conservation of V = x_1*x_2*x_3:")
 print(f"  Neutral (epsilon = 0):")
 print(f"    Initial V:       {V_neutral[0]:.6f}")
 print(f"    Final V:         {V_neutral[-1]:.6f}")

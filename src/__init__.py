@@ -1,1 +1,1 @@
-# Nonlinear Dynamics on Networks — source package
+# Nonlinear Dynamics on Networks - source package

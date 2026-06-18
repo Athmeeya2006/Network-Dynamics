@@ -174,7 +174,7 @@ ax3.set_ylabel(r'Measured sync onset $\sigma$', color=NAVY)
 ax3.set_title('(3) Prediction vs simulation', color=NAVY, fontweight='bold')
 ax3.legend(fontsize=8.5, framealpha=0.95, facecolor='white', edgecolor=SLATE)
 
-fig.suptitle('Module 5e — Master Stability Function: the eigenratio '
+fig.suptitle('Module 5e - Master Stability Function: the eigenratio '
              r'$\lambda_N/\lambda_2$ ranks synchronisability',
              fontsize=15, color=NAVY, fontweight='bold', y=1.02)
 plt.tight_layout()
@@ -194,7 +194,7 @@ complete_first = (emp_onset['complete'] == np.nanmin(meas)) and \
                  (info['complete']['R'] == min(info[n]['R'] for n in names))
 ok = (spearman > 0.8) and complete_first
 print("=" * 70)
-print("VERIFY — eigenratio ordering matches simulated synchronisability:")
+print("VERIFY - eigenratio ordering matches simulated synchronisability:")
 for n in names:
     print(f"  {n:12s}: R={info[n]['R']:6.2f}  predicted onset={info[n]['sigma_lo']:.4f}  "
           f"measured onset={emp_onset[n]}")

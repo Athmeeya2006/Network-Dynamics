@@ -72,7 +72,7 @@ ax2.set_title('Bifurcation Diagram', fontsize=13, color=NAVY,
 ax2.set_xlim(2.8, 4.0)
 ax2.set_ylim(0, 1)
 
-fig.suptitle('Module 2c — Lyapunov Exponent Overlaid on Bifurcation Diagram',
+fig.suptitle('Module 2c - Lyapunov Exponent Overlaid on Bifurcation Diagram',
              fontsize=15, color=NAVY, fontweight='bold', y=1.01)
 plt.tight_layout()
 
@@ -88,7 +88,7 @@ lam_p3 = map_lyapunov(logistic_map, logistic_map_derivative, 0.1, 3.83,
                        50000, 2000)
 
 print("=" * 65)
-print("VERIFY — Lyapunov exponent at key r values:")
+print("VERIFY - Lyapunov exponent at key r values:")
 print(f"  r = 3.0:  lambda = {lam_r3:+.6f}  "
       f"(theory: 0, period-doubling)")
 print(f"  r = 4.0:  lambda = {lam_r4:+.6f}  "

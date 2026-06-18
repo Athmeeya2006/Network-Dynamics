@@ -91,7 +91,7 @@ ax2.set_ylabel(r'$P(K \geq k)$', color=NAVY)
 ax2.set_title('Complementary CDF', color=NAVY, fontweight='bold')
 ax2.legend(fontsize=10, framealpha=0.95, facecolor='white', edgecolor=SLATE)
 
-fig.suptitle('Module 4c — Degree distributions: Poisson vs scale-free vs configuration model',
+fig.suptitle('Module 4c - Degree distributions: Poisson vs scale-free vs configuration model',
              fontsize=16, color=NAVY, fontweight='bold', y=1.0)
 plt.tight_layout()
 
@@ -100,7 +100,7 @@ fit_ba = fit_powerlaw(k_ba, xmin_max=40)
 gamma = fit_ba['alpha']
 ok = abs(gamma - 3.0) < 0.3
 print("=" * 70)
-print("VERIFY — BA degree distribution exponent (Clauset MLE):")
+print("VERIFY - BA degree distribution exponent (Clauset MLE):")
 print(f"  gamma_MLE = {gamma:.3f}  (xmin = {fit_ba['xmin']}, n_tail = {fit_ba['n_tail']})")
 print(f"  theory: gamma = 3.0   |gamma - 3| = {abs(gamma - 3.0):.3f} (< 0.3)")
 print(f"  status: {'PASS' if ok else 'FAIL'}")

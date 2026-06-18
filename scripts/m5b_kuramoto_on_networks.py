@@ -90,7 +90,7 @@ ax.annotate(rf'$K_{{50}}^{{ER}}={K50_er:.3f}$', (K50_er, 0.52), color=TEAL, font
 ax.annotate(rf'$K_{{50}}^{{BA}}={K50_ba:.3f}$', (K50_ba, 0.6), color=PURPLE, fontsize=10)
 ax.set_xlabel('Coupling $K$', color=NAVY)
 ax.set_ylabel('Order parameter $r$', color=NAVY)
-ax.set_title('Module 5b — Kuramoto on networks: scale-free topology lowers the sync onset\n'
+ax.set_title('Module 5b - Kuramoto on networks: scale-free topology lowers the sync onset\n'
              rf'$N={N}$, matched $\langle k\rangle\approx{mean_degree(G_ba):.1f}$',
              color=NAVY, fontweight='bold')
 ax.legend(fontsize=11, framealpha=0.95, facecolor='white', edgecolor=SLATE)
@@ -99,7 +99,7 @@ ax.set_ylim(-0.02, 1.0)
 # ── VERIFY ────────────────────────────────────────────────────────────────────
 ok = K50_ba < K50_er
 print("=" * 70)
-print("VERIFY — synchronisation onset, ER vs BA:")
+print("VERIFY - synchronisation onset, ER vs BA:")
 print(f"  K_50 (r crosses 0.5):  ER = {K50_er:.4f},  BA = {K50_ba:.4f}")
 print(f"  BA onset below ER onset: {'PASS' if ok else 'FAIL'}")
 print("=" * 70)

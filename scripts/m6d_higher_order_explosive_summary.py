@@ -7,7 +7,7 @@ synchronisation (Module 5) and contagion (Module 6).
 This is the capstone figure of the whole ladder. It places four transitions on
 one 2x2 dashboard to make the central message unmistakable: higher-order
 (group) interactions turn smooth, second-order transitions into abrupt,
-first-order ones with hysteresis — and the same story holds for both
+first-order ones with hysteresis - and the same story holds for both
 synchronisation and contagion.
 
     sync     : pairwise Kuramoto (K2=0)        -> continuous
@@ -111,17 +111,17 @@ def panel(ax, x, up, dn, xlabel, ylabel, title, shade):
 
 
 panel(axes[0, 0], K1_vals, sup_c, sdn_c, r'Coupling $K_1$', r'Sync $r$',
-      f'Pairwise Kuramoto — CONTINUOUS\nhysteresis = {sarea_c:.3f}', shade=False)
+      f'Pairwise Kuramoto - CONTINUOUS\nhysteresis = {sarea_c:.3f}', shade=False)
 panel(axes[0, 1], K1_vals, sup_e, sdn_e, r'Coupling $K_1$', r'Sync $r$',
-      f'Higher-order Kuramoto — EXPLOSIVE\nhysteresis = {sarea_e:.3f}', shade=True)
+      f'Higher-order Kuramoto - EXPLOSIVE\nhysteresis = {sarea_e:.3f}', shade=True)
 panel(axes[1, 0], betas, cup_c, cdn_c, r'Infection $\beta$', r'Infected $\rho^*$',
-      f'Pairwise SIS — CONTINUOUS\nhysteresis = {carea_c:.4f}', shade=False)
+      f'Pairwise SIS - CONTINUOUS\nhysteresis = {carea_c:.4f}', shade=False)
 panel(axes[1, 1], betas, cup_e, cdn_e, r'Infection $\beta$', r'Infected $\rho^*$',
-      f'Simplicial SIS — EXPLOSIVE\nhysteresis = {carea_e:.4f}', shade=True)
+      f'Simplicial SIS - EXPLOSIVE\nhysteresis = {carea_e:.4f}', shade=True)
 
 fig.text(0.5, 0.945, 'SYNCHRONISATION (Module 5)  |  CONTAGION (Module 6)',
          ha='center', fontsize=12, color=SLATE, style='italic')
-fig.suptitle('Module 6d — Higher-order interactions make transitions explosive, '
+fig.suptitle('Module 6d - Higher-order interactions make transitions explosive, '
              'across sync and contagion alike',
              fontsize=15, color=NAVY, fontweight='bold', y=1.0)
 plt.tight_layout(rect=[0, 0, 1, 0.94])
@@ -131,7 +131,7 @@ sync_ok = sarea_e > 5 * max(sarea_c, 1e-3)
 cont_ok = carea_e > 5 * max(carea_c, 1e-4)
 ok = sync_ok and cont_ok
 print("=" * 70)
-print("VERIFY — higher-order transitions are explosive in both domains:")
+print("VERIFY - higher-order transitions are explosive in both domains:")
 print(f"  sync:      pairwise hysteresis = {sarea_c:.4f}, higher-order = {sarea_e:.4f} "
       f"-> {'PASS' if sync_ok else 'FAIL'}")
 print(f"  contagion: pairwise hysteresis = {carea_c:.4f}, simplicial   = {carea_e:.4f} "
