@@ -16,9 +16,7 @@ import numpy as np
 from scipy.integrate import solve_ivp
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # FIXED-STEP RK4
-# ═══════════════════════════════════════════════════════════════════════════════
 
 def rk4_step(rhs, x, t, dt, *args):
     """
@@ -92,9 +90,7 @@ def rk4(rhs, x0, t_span, dt, *args):
     return t, x
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # SCIPY ADAPTIVE WRAPPER
-# ═══════════════════════════════════════════════════════════════════════════════
 
 def solve_ode(rhs, x0, t_span, t_eval=None, dt=None, method="RK45",
               rtol=1e-9, atol=1e-9, max_step=np.inf):

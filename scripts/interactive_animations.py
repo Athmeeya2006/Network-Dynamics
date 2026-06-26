@@ -5,9 +5,9 @@ Self-contained, interactive (auto-play, play/pause, scrub-slider, rotatable-3D)
 Plotly animations for the Nonlinear-Dynamics-on-Networks ladder. Each HTML is
 written to media/interactive/ and shares one local plotly.min.js (offline).
 
-Design goals: SMOOTH (fine time sampling) and a moderate, easy-to-follow
-playback speed. Dynamics are imported from src/ so the animations use the SAME
-equations as the static figures.
+The animations sample time finely for smooth playback at a moderate speed, and
+import the dynamics from src/ so they use the same equations as the static
+figures.
 
 Run:  python scripts/interactive_animations.py
 """
@@ -39,15 +39,13 @@ OUT = get_media_dir("interactive")
 LIGHTTXT = "#E2E8F0"
 MUTED = "#94A3B8"
 
-# Cyclic colorscale for phases (red→yellow→green→cyan→blue→magenta→red)
+# Cyclic colorscale for phases (red, yellow, green, cyan, blue, magenta, red)
 CYCLIC = [[0.0, "#FF3B3B"], [0.166, "#FFD166"], [0.333, "#06D6A0"],
           [0.5, "#1BE3E3"], [0.666, "#4D7CFF"], [0.833, "#C77DFF"],
           [1.0, "#FF3B3B"]]
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # HELPERS
-# ═══════════════════════════════════════════════════════════════════════════════
 
 def integrate(rhs, x0, T, dt, args=()):
     """Fixed-step RK4 trajectory; returns array (n+1, dim)."""
@@ -125,9 +123,7 @@ def finalize(fig, names, labels, filename, frame_ms, prefix=""):
     return path
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# 1 + 2  ATTRACTOR COMETS (Lorenz, Rössler) - rotatable 3D, animated draw
-# ═══════════════════════════════════════════════════════════════════════════════
+# 1 + 2  ATTRACTOR COMETS (Lorenz, Rossler), rotatable 3D, animated draw
 
 def attractor_comet(rhs, x0, T, dt, title, subtitle, color, filename,
                     F=300, trail=120, frame_ms=26):
@@ -156,9 +152,7 @@ def attractor_comet(rhs, x0, T, dt, title, subtitle, color, filename,
     return finalize(fig, names, labels, filename, frame_ms, prefix="time  ")
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# 3  BUTTERFLY EFFECT - two Lorenz trajectories, tiny initial gap
-# ═══════════════════════════════════════════════════════════════════════════════
+# 3  BUTTERFLY EFFECT, two Lorenz trajectories, tiny initial gap
 
 def butterfly():
     T, dt, trail, F, frame_ms = 45.0, 0.01, 90, 320, 26
@@ -188,19 +182,17 @@ def butterfly():
         sep = float(np.linalg.norm(a[i] - b[i]))
         frames.append(go.Frame(name=str(k), traces=[2, 3, 4, 5], data=[
             seg(a, i, TEAL, 5), seg(b, i, RED, 5), pt(a, i, "#7FE3F0"), pt(b, i, "#FF8A8A")],
-            layout=dict(title=dict(text="<b>Butterfly effect - two Lorenz trajectories</b>"
+            layout=dict(title=dict(text="<b>Butterfly effect: two Lorenz trajectories</b>"
                         f"<br><sup>start 0.001 apart, separation now = {sep:6.2f}</sup>"))))
         names.append(str(k)); labels.append(f"t={i*dt:.1f}")
 
     fig = go.Figure(data=data, layout=base_layout(
-        "Butterfly effect - two Lorenz trajectories",
+        "Butterfly effect: two Lorenz trajectories",
         "start 0.001 apart, they track, then diverge", is3d=True), frames=frames)
     return finalize(fig, names, labels, "anim_butterfly_effect.html", frame_ms, prefix="time  ")
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# 4  DOUBLE PENDULUM - 8 near-identical copies, slow-motion sensitive dependence
-# ═══════════════════════════════════════════════════════════════════════════════
+# 4  DOUBLE PENDULUM, 8 near-identical copies, slow-motion sensitive dependence
 
 def double_pendulum_rhs(s, t, g=9.81, L1=1.0, L2=1.0, m1=1.0, m2=1.0):
     th1, w1, th2, w2 = s
@@ -221,7 +213,7 @@ def double_pendulum():
     trail = 40                 # bob trail length (frames)
     frame_ms = 40              # moderate slow motion, easy to follow
     L1 = L2 = 1.0
-    th1_0, th2_0 = 1.9, 1.9    # both arms raised → richly chaotic
+    th1_0, th2_0 = 1.9, 1.9    # both arms raised, richly chaotic
     cols = rainbow(P)
 
     trajs = []
@@ -262,9 +254,7 @@ def double_pendulum():
     return finalize(fig, names, labels, "anim_double_pendulum.html", frame_ms, prefix="time  ")
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# 5  LOGISTIC COBWEB - animated over the parameter r
-# ═══════════════════════════════════════════════════════════════════════════════
+# 5  LOGISTIC COBWEB, animated over the parameter r
 
 def logistic_cobweb():
     rs = np.linspace(2.5, 3.99, 130)
@@ -290,7 +280,7 @@ def logistic_cobweb():
         if r < 3.0: return "fixed point"
         if r < 3.449: return "period-2"
         if r < 3.544: return "period-4"
-        if r < 3.5699: return "period-8 →"
+        if r < 3.5699: return "period-8 and up"
         return "CHAOS"
 
     frames, names, labels = [], [], []
@@ -299,19 +289,17 @@ def logistic_cobweb():
         frames.append(go.Frame(name=str(k), traces=[1, 2], data=[
             go.Scatter(x=xg, y=r * xg * (1 - xg)), go.Scatter(x=cx, y=cy)],
             layout=dict(title=dict(text="<b>Logistic map cobweb</b>"
-                        f"<br><sup>r = {r:.3f}  →  {regime(r)}</sup>"))))
+                        f"<br><sup>r = {r:.3f}, {regime(r)}</sup>"))))
         names.append(str(k)); labels.append(f"{r:.2f}")
 
-    lay = base_layout("Logistic map cobweb", f"r = {rs[0]:.3f}  →  {regime(rs[0])}")
+    lay = base_layout("Logistic map cobweb", f"r = {rs[0]:.3f}, {regime(rs[0])}")
     lay["xaxis"].update(range=[0, 1], title="xₙ")
     lay["yaxis"].update(range=[0, 1], title="xₙ₊₁", scaleanchor="x")
     fig = go.Figure(data=[diag, para, web], layout=lay, frames=frames)
     return finalize(fig, names, labels, "anim_logistic_cobweb.html", 75, prefix="parameter r = ")
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# 6  STUART-LANDAU LIMIT CYCLE - trajectories converge onto the cycle
-# ═══════════════════════════════════════════════════════════════════════════════
+# 6  STUART-LANDAU LIMIT CYCLE, trajectories converge onto the cycle
 
 def limit_cycle():
     osc = StuartLandau(mu=1.0, omega=1.6)   # limit-cycle radius = 1
@@ -347,16 +335,14 @@ def limit_cycle():
         names.append(str(k)); labels.append(f"t={i*dt:.1f}")
 
     lay = base_layout("Stuart-Landau: every start spirals onto the same limit cycle",
-                      "μ = 1  →  cycle radius √μ = 1 (dashed)")
+                      "μ = 1, cycle radius √μ = 1 (dashed)")
     lay["xaxis"].update(range=[-2.1, 2.1], title="x")
     lay["yaxis"].update(range=[-2.1, 2.1], title="y", scaleanchor="x")
     fig = go.Figure(data=data, layout=lay, frames=frames)
     return finalize(fig, names, labels, "anim_limit_cycle.html", frame_ms, prefix="time  ")
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# 7  REPLICATOR RPS - orbits on the simplex (neutral / stable / unstable)
-# ═══════════════════════════════════════════════════════════════════════════════
+# 7  REPLICATOR RPS, orbits on the simplex (neutral, stable, unstable)
 
 def rps_simplex():
     T, dt, trail, F, frame_ms = 120.0, 0.02, 55, 340, 26
@@ -410,9 +396,7 @@ def rps_simplex():
     return finalize(fig, names, labels, "anim_rps_simplex.html", frame_ms, prefix="time  ")
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# 8  KURAMOTO ON THE CIRCLE - synchronization in time
-# ═══════════════════════════════════════════════════════════════════════════════
+# 8  KURAMOTO ON THE CIRCLE, synchronization in time
 
 def kuramoto_circle():
     rng = np.random.default_rng(7)
@@ -460,9 +444,7 @@ def kuramoto_circle():
     return finalize(fig, names, labels, "anim_kuramoto_circle.html", frame_ms, prefix="time  ")
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# 9  KURAMOTO ON A NETWORK - nodes coloured by phase
-# ═══════════════════════════════════════════════════════════════════════════════
+# 9  KURAMOTO ON A NETWORK, nodes coloured by phase
 
 def kuramoto_network():
     rng = np.random.default_rng(3)
@@ -510,9 +492,7 @@ def kuramoto_network():
     return finalize(fig, names, labels, "anim_kuramoto_network.html", frame_ms, prefix="time  ")
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# 10  VECTOR-FIELD FLOW - particles advected in a 2D phase portrait
-# ═══════════════════════════════════════════════════════════════════════════════
+# 10  VECTOR-FIELD FLOW, particles advected in a 2D phase portrait
 
 def vector_field_flow():
     A = np.array([[-0.30, -1.1], [1.1, -0.30]])   # stable spiral
@@ -561,9 +541,7 @@ def vector_field_flow():
     return finalize(fig, names, labels, "anim_vector_field_flow.html", frame_ms, prefix="step ")
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# 11  PITCHFORK POTENTIAL - a ball in a changing double-well
-# ═══════════════════════════════════════════════════════════════════════════════
+# 11  PITCHFORK POTENTIAL, a ball in a changing double-well
 
 def pitchfork_potential():
     rs = np.concatenate([np.linspace(-1.0, 2.0, 110), np.linspace(2.0, -1.0, 110)])
@@ -584,26 +562,27 @@ def pitchfork_potential():
     frames, names, labels = [], [], []
     for k, r in enumerate(rs):
         bx = ball(r)
-        state = "one stable rest state" if r <= 0 else "symmetry broken → two wells"
+        state = "one stable rest state" if r <= 0 else "symmetry broken, two wells"
         frames.append(go.Frame(name=str(k), traces=[0, 1], data=[
             go.Scatter(x=xg, y=V(xg, r)), go.Scatter(x=[bx], y=[V(bx, r)])],
             layout=dict(title=dict(text="<b>Supercritical pitchfork as a potential well</b>"
-                        f"<br><sup>r = {r:+.2f}  →  {state}</sup>"))))
+                        f"<br><sup>r = {r:+.2f}, {state}</sup>"))))
         names.append(str(k)); labels.append(f"{r:+.2f}")
 
     lay = base_layout("Supercritical pitchfork as a potential well",
-                      f"r = {rs[0]:+.2f}  →  one stable rest state")
+                      f"r = {rs[0]:+.2f}, one stable rest state")
     lay["xaxis"].update(range=[-1.8, 1.8], title="state x")
     lay["yaxis"].update(range=[-1.1, 0.9], title="potential V(x)")
     fig = go.Figure(data=[cv, bp], layout=lay, frames=frames)
     return finalize(fig, names, labels, "anim_pitchfork_potential.html", 55, prefix="parameter r = ")
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # INDEX PAGE
-# ═══════════════════════════════════════════════════════════════════════════════
 
 INTERACTIVE = [
+    ("Module 1", "1D bifurcations", "Saddle-node, transcritical and both pitchforks, with the phase line and diagram.", "sim_1d_bifurcations.html"),
+    ("Module 1", "Hopf bifurcation (2D)", "Soft and hard onset of a limit cycle, with the amplitude diagram and hysteresis.", "sim_2d_bifurcations.html"),
+    ("Module 1", "Van der Pol limit cycle", "Slide mu from a near-circular orbit to stiff relaxation spikes.", "sim_van_der_pol.html"),
     ("Chaos", "Double pendulum", "Sliders for count, start angles, gravity, spread and speed.", "sim_double_pendulum.html"),
     ("Chaos", "Lorenz attractor", "Tune sigma, rho, beta live; drag to rotate the 3-D view.", "sim_lorenz.html"),
     ("Module 5", "Kuramoto sync", "Change coupling K, N and frequency spread; r updates live.", "sim_kuramoto_circle.html"),
@@ -671,13 +650,13 @@ def build_index():
 </style></head><body>
   <header>
     <h1>Nonlinear Dynamics on Networks</h1>
-    <p>Two kinds of visual: interactive labs you control, and cinematic auto-play clips.</p>
+    <p>Interactive labs you control, plus auto-playing animation clips.</p>
   </header>
   <h2 class="sec">Interactive simulations <span>move a slider and the simulation re-runs live</span></h2>
   <main class="grid">
 {cards(INTERACTIVE)}
   </main>
-  <h2 class="sec">Cinematic animations <span>auto-play; drag the slider, rotate the 3-D scenes</span></h2>
+  <h2 class="sec">Animation clips <span>auto-play; drag the slider, rotate the 3-D scenes</span></h2>
   <main class="grid">
 {cards(CINEMATIC)}
   </main>
@@ -689,12 +668,10 @@ def build_index():
     print("  saved  media/interactive/index.html")
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # MAIN
-# ═══════════════════════════════════════════════════════════════════════════════
 
 def main():
-    print("Building interactive animations → media/interactive/")
+    print("Building interactive animations in media/interactive/")
     attractor_comet(lorenz, [1.0, 1.0, 1.0], 50.0, 0.01,
                     "Lorenz strange attractor", "σ=10, β=8/3, ρ=28, drag to rotate",
                     TEAL, "anim_lorenz_comet.html")

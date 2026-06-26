@@ -1,7 +1,7 @@
 """
 m5a_kuramoto_basic.py
 =====================
-Module 5a - Mean-field Kuramoto model and the synchronisation transition.
+Module 5a: Mean-field Kuramoto model and the synchronisation transition.
 
 Proof verified:
     For globally coupled phase oscillators with a unimodal frequency
@@ -31,7 +31,7 @@ from src.kuramoto import (mean_field_rhs, adiabatic_sweep, run_kuramoto,
 np.random.seed(42)
 setup_light_theme()
 
-# ── Frequencies: deterministic Lorentzian quantiles (low finite-N noise) ─────
+# Frequencies: deterministic Lorentzian quantiles (low finite-N noise)
 N = 1000
 gamma = 1.0
 u = (np.arange(1, N + 1)) / (N + 1)
@@ -42,12 +42,12 @@ g0 = 1.0 / (np.pi * gamma)
 print(f"Lorentzian half-width gamma={gamma}, g(0)={g0:.4f}, "
       f"predicted K_c = 2/(pi g(0)) = {Kc_pred:.3f}")
 
-# ── Forward coupling sweep ───────────────────────────────────────────────────
+# Forward coupling sweep
 K_values = np.linspace(0.4, 4.0, 25)
 print("Forward coupling sweep...")
 r_of_K = adiabatic_sweep(K_values, omega, mean_field_rhs, T=40, dt=0.02, seed=1)
 
-# ── Recover K_c by fitting r^2 = 1 - K_c/K on the supercritical branch ───────
+# Recover K_c by fitting r^2 = 1 - K_c/K on the supercritical branch
 mask = r_of_K > 0.25
 inv_K = 1.0 / K_values[mask]
 r2 = r_of_K[mask] ** 2
@@ -55,7 +55,7 @@ slope, intercept = np.polyfit(inv_K, r2, 1)   # r^2 = intercept + slope*(1/K)
 Kc_fit = -slope                                # since r^2 = 1 - K_c (1/K)
 err = abs(Kc_fit - Kc_pred) / Kc_pred
 
-# ── Phase snapshots at three couplings ───────────────────────────────────────
+# Phase snapshots at three couplings
 snap_Ks = [1.0, 2.0, 3.5]
 snaps = {}
 rng = np.random.default_rng(3)
@@ -64,7 +64,7 @@ for K in snap_Ks:
                             omega, K, T=50, dt=0.02, record_trace=True)
     snaps[K] = np.mod(th, 2 * np.pi)
 
-# ── Figure ────────────────────────────────────────────────────────────────────
+# Figure
 fig = plt.figure(figsize=(16, 6.5))
 gs = fig.add_gridspec(1, 2, width_ratios=[1.3, 1.0], wspace=0.25)
 fig.patch.set_facecolor("#F8FAFC")
@@ -98,13 +98,13 @@ ax.set_title('Phase distributions', color=NAVY, fontweight='bold', pad=18)
 ax.legend(fontsize=8.5, loc='upper right', bbox_to_anchor=(1.18, 1.12),
           framealpha=0.95, facecolor='white', edgecolor=SLATE)
 
-fig.suptitle('Module 5a - Kuramoto mean-field model: critical coupling $K_c = 2/(\\pi g(0))$',
+fig.suptitle('Module 5a: Kuramoto mean-field model: critical coupling $K_c = 2/(\\pi g(0))$',
              fontsize=15, color=NAVY, fontweight='bold', y=1.0)
 
-# ── VERIFY ────────────────────────────────────────────────────────────────────
+# VERIFY
 ok = err < 0.05
 print("=" * 70)
-print("VERIFY - Kuramoto critical coupling:")
+print("VERIFY: Kuramoto critical coupling:")
 print(f"  predicted K_c = 2/(pi g(0)) = 2 gamma = {Kc_pred:.4f}")
 print(f"  fitted    K_c (from r^2 = 1 - K_c/K) = {Kc_fit:.4f}")
 print(f"  relative error = {err * 100:.2f}%  (< 5%)")

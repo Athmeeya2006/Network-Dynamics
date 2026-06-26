@@ -1,7 +1,7 @@
 """
 m1a_1d_bifurcations.py
 ======================
-Module 1a - One-dimensional bifurcations of flows on a line.
+Module 1a: One-dimensional bifurcations of flows on a line.
 
 Proof verified:
     Near the supercritical pitchfork bifurcation x_dot = r*x - x^3,
@@ -31,7 +31,7 @@ from src.viz import (NAVY, TEAL, RED, GOLD, SLATE, LIGHT, PURPLE,
 np.random.seed(42)
 setup_light_theme()
 
-# ── Bifurcation data ─────────────────────────────────────────────────────────
+# Bifurcation data
 r = np.linspace(-2, 2, 1000)
 r_pos = r[r >= 0]
 r_neg = r[r <= 0]
@@ -39,7 +39,7 @@ r_neg = r[r <= 0]
 fig, axes = plt.subplots(2, 2, figsize=(14, 11))
 fig.patch.set_facecolor("#F8FAFC")
 
-# ── (a) Saddle-node: x_dot = r + x^2 ────────────────────────────────────────
+# (a) Saddle-node: x_dot = r + x^2
 ax = axes[0, 0]
 apply_axes_style(ax)
 # Fixed points: x* = ±sqrt(-r) for r < 0
@@ -59,7 +59,7 @@ ax.set_ylim(-2, 2)
 ax.axhline(0, color=SLATE, lw=0.5, ls=':')
 ax.axvline(0, color=SLATE, lw=0.5, ls=':')
 
-# ── (b) Transcritical: x_dot = r*x - x^2 ───────────────────────────────────
+# (b) Transcritical: x_dot = r*x - x^2
 ax = axes[0, 1]
 apply_axes_style(ax)
 # Fixed points: x* = 0 and x* = r
@@ -88,7 +88,7 @@ legend_elements = [Line2D([0], [0], color=TEAL, lw=2.5, label='Stable'),
 ax.legend(handles=legend_elements, fontsize=10, framealpha=0.95,
           facecolor='white', edgecolor=SLATE)
 
-# ── (c) Supercritical pitchfork: x_dot = r*x - x^3 ─────────────────────────
+# (c) Supercritical pitchfork: x_dot = r*x - x^3
 ax = axes[1, 0]
 apply_axes_style(ax)
 r_pf = np.linspace(-2, 2, 500)
@@ -111,13 +111,13 @@ ax.axvline(0, color=SLATE, lw=0.5, ls=':')
 ax.legend(handles=legend_elements, fontsize=10, framealpha=0.95,
           facecolor='white', edgecolor=SLATE)
 
-# ── (d) Subcritical pitchfork: x_dot = r*x + x^3 ───────────────────────────
+# (d) Subcritical pitchfork: x_dot = r*x + x^3
 ax = axes[1, 1]
 apply_axes_style(ax)
 # Branch x* = 0: unstable for r > 0, stable for r < 0
-# Wait - subcritical: x_dot = rx + x^3
+# Subcritical: x_dot = rx + x^3
 # f'(0) = r, so x*=0 stable when r < 0, unstable when r > 0
-# x* = ±sqrt(-r) for r < 0, and f'(x*) = r + 3x*^2 = r + 3(-r) = -2r > 0 → unstable
+# x* = ±sqrt(-r) for r < 0, and f'(x*) = r + 3x*^2 = r + 3(-r) = -2r > 0, so unstable
 ax.plot(r_pf[r_pf <= 0], np.zeros(np.sum(r_pf <= 0)), '-', color=TEAL, lw=2.5)
 ax.plot(r_pf[r_pf >= 0], np.zeros(np.sum(r_pf >= 0)), '--', color=RED, lw=2.5)
 r_neg_pf = r_pf[r_pf < 0]
@@ -135,11 +135,11 @@ ax.axvline(0, color=SLATE, lw=0.5, ls=':')
 ax.legend(handles=legend_elements, fontsize=10, framealpha=0.95,
           facecolor='white', edgecolor=SLATE)
 
-fig.suptitle('Module 1a - One-Dimensional Bifurcations of Flows on a Line',
+fig.suptitle('Module 1a: One-Dimensional Bifurcations of Flows on a Line',
              fontsize=15, color=NAVY, fontweight='bold', y=1.01)
 plt.tight_layout()
 
-# ── VERIFY: supercritical pitchfork exponent ─────────────────────────────────
+# VERIFY: supercritical pitchfork exponent
 r_verify = np.linspace(0.01, 2.0, 200)
 x_star = np.sqrt(r_verify)
 log_r = np.log(r_verify)
@@ -147,7 +147,7 @@ log_x = np.log(x_star)
 coeffs = np.polyfit(log_r, log_x, 1)
 exponent = coeffs[0]
 print("=" * 65)
-print("VERIFY - Supercritical pitchfork critical exponent:")
+print("VERIFY: Supercritical pitchfork critical exponent:")
 print(f"  Theory:   beta = 0.5000")
 print(f"  Measured: beta = {exponent:.4f}")
 print(f"  Error:    {abs(exponent - 0.5):.6f}")

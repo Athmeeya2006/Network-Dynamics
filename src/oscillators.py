@@ -231,7 +231,7 @@ class VanDerPol:
     mu : float
         Nonlinearity / damping parameter.
         mu = 0: harmonic oscillator.
-        mu > 0: limit cycle. Large mu → relaxation oscillations.
+        mu > 0: limit cycle. Large mu gives relaxation oscillations.
     """
 
     def __init__(self, mu=1.0):

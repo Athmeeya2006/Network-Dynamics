@@ -20,9 +20,7 @@ from __future__ import annotations
 import numpy as np
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # ORDER PARAMETER
-# ═══════════════════════════════════════════════════════════════════════════════
 
 def order_parameter(theta: np.ndarray) -> tuple[float, float]:
     """
@@ -39,9 +37,7 @@ def order_parameter(theta: np.ndarray) -> tuple[float, float]:
     return float(np.abs(z)), float(np.angle(z))
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # RIGHT-HAND SIDES
-# ═══════════════════════════════════════════════════════════════════════════════
 
 def mean_field_rhs(theta, t, omega, K):
     """
@@ -69,9 +65,7 @@ def network_rhs(theta, t, omega, K, A):
     return omega + K * coupling
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # INTEGRATION
-# ═══════════════════════════════════════════════════════════════════════════════
 
 def run_kuramoto(rhs, theta0, omega, K, extra=(), T=40.0, dt=0.01,
                  transient_frac=0.5, record_trace=False):
@@ -156,9 +150,7 @@ def adiabatic_sweep(K_values, omega, rhs, extra=(), theta0=None,
     return r_of_K
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # CRITICAL COUPLING PREDICTIONS  (K_c = 2 / (pi g(0)))
-# ═══════════════════════════════════════════════════════════════════════════════
 
 def kc_lorentzian(gamma: float) -> float:
     """

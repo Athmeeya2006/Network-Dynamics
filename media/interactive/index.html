@@ -1,0 +1,175 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nonlinear Dynamics - Interactive Simulations</title>
+<style>
+  :root { --bg:#020617; --card:#0F172A; --dim:#334155; --txt:#E2E8F0; --muted:#94A3B8;
+           --teal:#0E7490; --gold:#D97706; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--txt);
+          font-family:Inter,'Segoe UI',system-ui,sans-serif; }
+  header { padding:46px 24px 4px; text-align:center; }
+  header h1 { margin:0; font-size:2.1rem; letter-spacing:.3px; }
+  header p { color:var(--muted); margin:.5rem 0 0; font-size:1.02rem; }
+  h2.sec { max-width:1100px; margin:30px auto 0; padding:0 22px; font-size:1.15rem;
+            color:var(--txt); }
+  h2.sec span { color:var(--muted); font-size:.92rem; font-weight:400; }
+  .grid { max-width:1100px; margin:14px auto 0; padding:0 20px;
+           display:grid; gap:18px; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); }
+  .card { background:var(--card); border:1px solid var(--dim); border-radius:14px;
+           padding:20px 20px 16px; text-decoration:none; color:var(--txt);
+           transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+           display:flex; flex-direction:column; }
+  .card:hover { transform:translateY(-4px); border-color:var(--teal);
+                 box-shadow:0 10px 30px rgba(14,116,144,.25); }
+  .badge { align-self:flex-start; font-size:.72rem; font-weight:700; letter-spacing:.5px;
+            color:var(--bg); background:var(--gold); padding:3px 9px; border-radius:20px;
+            text-transform:uppercase; }
+  .card h3 { margin:.7rem 0 .4rem; font-size:1.15rem; }
+  .card p { margin:0; color:var(--muted); font-size:.92rem; line-height:1.45; flex:1; }
+  .go { margin-top:12px; color:var(--teal); font-weight:600; font-size:.9rem; }
+  footer { text-align:center; color:var(--muted); padding:24px; font-size:.85rem; }
+</style></head><body>
+  <header>
+    <h1>Nonlinear Dynamics on Networks</h1>
+    <p>Interactive labs you control, plus auto-playing animation clips.</p>
+  </header>
+  <h2 class="sec">Interactive simulations <span>move a slider and the simulation re-runs live</span></h2>
+  <main class="grid">
+      <a class="card" href="sim_1d_bifurcations.html">
+        <div class="badge">Module 1</div>
+        <h3>1D bifurcations</h3>
+        <p>Saddle-node, transcritical and both pitchforks, with the phase line and diagram.</p>
+        <span class="go">open</span>
+      </a>
+      <a class="card" href="sim_2d_bifurcations.html">
+        <div class="badge">Module 1</div>
+        <h3>Hopf bifurcation (2D)</h3>
+        <p>Soft and hard onset of a limit cycle, with the amplitude diagram and hysteresis.</p>
+        <span class="go">open</span>
+      </a>
+      <a class="card" href="sim_van_der_pol.html">
+        <div class="badge">Module 1</div>
+        <h3>Van der Pol limit cycle</h3>
+        <p>Slide mu from a near-circular orbit to stiff relaxation spikes.</p>
+        <span class="go">open</span>
+      </a>
+      <a class="card" href="sim_double_pendulum.html">
+        <div class="badge">Chaos</div>
+        <h3>Double pendulum</h3>
+        <p>Sliders for count, start angles, gravity, spread and speed.</p>
+        <span class="go">open</span>
+      </a>
+      <a class="card" href="sim_lorenz.html">
+        <div class="badge">Chaos</div>
+        <h3>Lorenz attractor</h3>
+        <p>Tune sigma, rho, beta live; drag to rotate the 3-D view.</p>
+        <span class="go">open</span>
+      </a>
+      <a class="card" href="sim_kuramoto_circle.html">
+        <div class="badge">Module 5</div>
+        <h3>Kuramoto sync</h3>
+        <p>Change coupling K, N and frequency spread; r updates live.</p>
+        <span class="go">open</span>
+      </a>
+      <a class="card" href="sim_logistic.html">
+        <div class="badge">Maps</div>
+        <h3>Logistic cobweb</h3>
+        <p>Slide r through the period-doubling route to chaos.</p>
+        <span class="go">open</span>
+      </a>
+      <a class="card" href="sim_limit_cycle.html">
+        <div class="badge">Module 1</div>
+        <h3>Hopf limit cycle</h3>
+        <p>Slide mu across the Hopf bifurcation (point vs cycle).</p>
+        <span class="go">open</span>
+      </a>
+      <a class="card" href="sim_pitchfork.html">
+        <div class="badge">Module 1</div>
+        <h3>Pitchfork potential</h3>
+        <p>Slide r and watch the single well split in two.</p>
+        <span class="go">open</span>
+      </a>
+      <a class="card" href="sim_rps.html">
+        <div class="badge">Module 3</div>
+        <h3>RPS replicator</h3>
+        <p>Slide the payoff: closed orbit, spiral-in, spiral-out.</p>
+        <span class="go">open</span>
+      </a>
+      <a class="card" href="sim_vector_field.html">
+        <div class="badge">Module 1</div>
+        <h3>Phase portrait</h3>
+        <p>Tune the matrix [[a,b],[c,d]] and classify the flow.</p>
+        <span class="go">open</span>
+      </a>
+  </main>
+  <h2 class="sec">Animation clips <span>auto-play; drag the slider, rotate the 3-D scenes</span></h2>
+  <main class="grid">
+      <a class="card" href="anim_lorenz_comet.html">
+        <div class="badge">Chaos</div>
+        <h3>Lorenz attractor</h3>
+        <p>A comet traces the butterfly attractor in 3-D, rotatable.</p>
+        <span class="go">open</span>
+      </a>
+      <a class="card" href="anim_rossler_comet.html">
+        <div class="badge">Chaos</div>
+        <h3>Rossler attractor</h3>
+        <p>The folded-band attractor that period-doubles to chaos.</p>
+        <span class="go">open</span>
+      </a>
+      <a class="card" href="anim_butterfly_effect.html">
+        <div class="badge">Chaos</div>
+        <h3>Butterfly effect</h3>
+        <p>Two trajectories 0.001 apart track, then diverge wildly.</p>
+        <span class="go">open</span>
+      </a>
+      <a class="card" href="anim_double_pendulum.html">
+        <div class="badge">Chaos</div>
+        <h3>Double pendulum</h3>
+        <p>Eight near-identical pendulums fan apart in slow motion.</p>
+        <span class="go">open</span>
+      </a>
+      <a class="card" href="anim_logistic_cobweb.html">
+        <div class="badge">Maps</div>
+        <h3>Logistic cobweb</h3>
+        <p>Sweep r and watch period-doubling 1, 2, 4, chaos.</p>
+        <span class="go">open</span>
+      </a>
+      <a class="card" href="anim_limit_cycle.html">
+        <div class="badge">Module 1</div>
+        <h3>Stuart-Landau limit cycle</h3>
+        <p>Every start spirals onto the same Hopf limit cycle.</p>
+        <span class="go">open</span>
+      </a>
+      <a class="card" href="anim_rps_simplex.html">
+        <div class="badge">Module 3</div>
+        <h3>RPS on the simplex</h3>
+        <p>Replicator orbits: closed, spiral-in, spiral-out.</p>
+        <span class="go">open</span>
+      </a>
+      <a class="card" href="anim_kuramoto_circle.html">
+        <div class="badge">Module 5</div>
+        <h3>Kuramoto on a circle</h3>
+        <p>Phases clump up and the order parameter r grows.</p>
+        <span class="go">open</span>
+      </a>
+      <a class="card" href="anim_kuramoto_network.html">
+        <div class="badge">Module 5</div>
+        <h3>Kuramoto on a network</h3>
+        <p>Nodes coloured by phase lock into clusters.</p>
+        <span class="go">open</span>
+      </a>
+      <a class="card" href="anim_vector_field_flow.html">
+        <div class="badge">Module 1</div>
+        <h3>Phase-flow particles</h3>
+        <p>Particles ride a stable-spiral vector field inward.</p>
+        <span class="go">open</span>
+      </a>
+      <a class="card" href="anim_pitchfork_potential.html">
+        <div class="badge">Module 1</div>
+        <h3>Pitchfork potential</h3>
+        <p>A ball in a well that splits in two as r increases.</p>
+        <span class="go">open</span>
+      </a>
+  </main>
+  <footer>Self-contained Plotly, drag to rotate 3-D, scroll to zoom, double-click to reset</footer>
+</body></html>

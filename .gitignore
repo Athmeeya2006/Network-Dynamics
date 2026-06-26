@@ -36,6 +36,11 @@ env/
 .DS_Store
 Thumbs.db
 
-# Media outputs (generated, not tracked)
+# Manim video output (regenerable, not tracked)
 media/videos/
-media/interactive/
+
+# Large regenerable interactive outputs (rebuilt by scripts/interactive_animations.py
+# and scripts/m2d_*, m2f_*). The hand-written labs and plotly.min.js stay tracked.
+media/interactive/anim_*.html
+media/interactive/lorenz_3d.html
+media/interactive/rossler_3d.html

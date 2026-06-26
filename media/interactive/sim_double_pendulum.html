@@ -1,0 +1,123 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Double pendulum - interactive</title>
+<link rel="stylesheet" href="sim.css">
+<script src="plotly.min.js" charset="utf-8"></script>
+<script src="sim_lib.js"></script>
+</head><body>
+<header>
+  <a class="back" href="index.html">&larr; all simulations</a>
+  <h1>Double pendulum</h1>
+  <p>Chaos / sensitive dependence. Drag any slider to change the simulation live.</p>
+</header>
+<div class="wrap">
+  <div id="plot"></div>
+  <div class="panel" id="panel"><h2>Parameters</h2></div>
+</div>
+<script>
+const plot = document.getElementById('plot');
+const panel = document.getElementById('panel');
+const { COL, rk4, rainbow, slider, button, row, note } = SimLib;
+
+let P = 8, g = 9.81, th1deg = 110, th2deg = 110, spread = 0.001, trailLen = 40, speed = 0.8;
+const dt = 0.004;
+let states = [], trails = [], t = 0, playing = true, raf = null;
+
+function rhs(_, s) {
+  const th1 = s[0], w1 = s[1], th2 = s[2], w2 = s[3], d = th1 - th2;
+  const den = 3 - Math.cos(2 * th1 - 2 * th2);
+  const a1 = (-3 * g * Math.sin(th1) - g * Math.sin(th1 - 2 * th2)
+              - 2 * Math.sin(d) * (w2 * w2 + w1 * w1 * Math.cos(d))) / den;
+  const a2 = (2 * Math.sin(d) * (2 * w1 * w1 + 2 * g * Math.cos(th1)
+              + w2 * w2 * Math.cos(d))) / den;
+  return [w1, a1, w2, a2];
+}
+
+function pos(s) {
+  const x1 = Math.sin(s[0]), y1 = -Math.cos(s[0]);
+  return [x1, y1, x1 + Math.sin(s[2]), y1 - Math.cos(s[2])];
+}
+
+function reset() {
+  states = []; trails = []; t = 0;
+  const th1 = th1deg * Math.PI / 180, th2 = th2deg * Math.PI / 180;
+  for (let p = 0; p < P; p++) { states.push([th1 + p * spread, 0, th2, 0]); trails.push([]); }
+  draw();
+}
+
+function draw() {
+  const data = [];
+  for (let p = 0; p < P; p++) {
+    const c = rainbow(p, P), q = pos(states[p]);
+    data.push({ x: [0, q[0], q[2]], y: [0, q[1], q[3]], mode: 'lines+markers',
+                line: { color: c, width: 2.5 }, marker: { size: [4, 6, 11], color: c }, hoverinfo: 'skip' });
+  }
+  for (let p = 0; p < P; p++)
+    data.push({ x: [], y: [], mode: 'lines', line: { color: rainbow(p, P), width: 1.5 },
+                opacity: 0.45, hoverinfo: 'skip' });
+  const lay = SimLib.layout('Double pendulum',
+    { uirevision: 'keep', xaxis: { range: [-2.3, 2.3], visible: false },
+      yaxis: { range: [-2.4, 1.5], visible: false, scaleanchor: 'x' } });
+  Plotly.react(plot, data, lay, SimLib.config);
+}
+
+function step() {
+  const subs = Math.max(1, Math.round(speed * 4));
+  for (let k = 0; k < subs; k++) {
+    for (let p = 0; p < P; p++) states[p] = rk4(rhs, t, states[p], dt);
+    t += dt;
+  }
+  const xs = [], ys = [], idx = [];
+  for (let p = 0; p < P; p++) {
+    const q = pos(states[p]);
+    xs.push([0, q[0], q[2]]); ys.push([0, q[1], q[3]]); idx.push(p);
+    trails[p].push([q[2], q[3]]);
+    while (trails[p].length > trailLen) trails[p].shift();
+  }
+  for (let p = 0; p < P; p++) {
+    idx.push(P + p);
+    xs.push(trails[p].map(a => a[0])); ys.push(trails[p].map(a => a[1]));
+  }
+  Plotly.restyle(plot, { x: xs, y: ys }, idx);
+}
+
+function loop() { if (!playing) return; step(); raf = requestAnimationFrame(loop); }
+function play() { if (playing) return; playing = true; loop(); }
+function pause() { playing = false; if (raf) cancelAnimationFrame(raf); }
+
+slider(panel, { label: 'Pendulums', min: 1, max: 18, step: 1, value: P, fmt: v => v | 0,
+  onInput: v => { P = v | 0; reset(); } });
+slider(panel, { label: 'Start angle 1', min: 10, max: 179, step: 1, value: th1deg, unit: '°',
+  fmt: v => v | 0, onInput: v => { th1deg = v; reset(); } });
+slider(panel, { label: 'Start angle 2', min: 10, max: 179, step: 1, value: th2deg, unit: '°',
+  fmt: v => v | 0, onInput: v => { th2deg = v; reset(); } });
+slider(panel, { label: 'Gravity g', min: 1, max: 25, step: 0.1, value: g,
+  onInput: v => { g = v; } });
+slider(panel, { label: 'Initial spread', min: 0.0001, max: 0.05, step: 0.0001, value: spread,
+  fmt: v => (+v).toFixed(4) + ' rad', onInput: v => { spread = v; reset(); } });
+slider(panel, { label: 'Trail length', min: 0, max: 120, step: 1, value: trailLen,
+  fmt: v => v | 0, onInput: v => { trailLen = v | 0; } });
+slider(panel, { label: 'Speed', min: 0.2, max: 3, step: 0.1, value: speed, unit: '×',
+  onInput: v => { speed = v; } });
+row(panel, [button(panel, '▶ Play', play), button(panel, '❚❚ Pause', pause),
+            button(panel, '↻ Reset', reset, 'alt')]);
+note(panel, 'All copies start almost identically. With a tiny spread they overlap, then chaos fans them apart. Raise the spread to see it sooner.');
+
+SimLib.explain([
+  { title: 'What you are looking at', html:
+    '<p>A double pendulum is two rods joined end to end and swung under gravity. It is a mechanical system with just two angles, yet its motion is chaotic. Several copies are launched with almost the same starting angle; each leaves a fading trail of its lower bob.</p>' },
+  { title: 'Sensitive dependence', html:
+    '<p>The copies differ only by the tiny initial spread you set. At first they move as one, because the difference is small. But the system stretches nearby states apart exponentially, so the copies suddenly fan out and follow completely different paths. This is deterministic chaos: fully determined by the equations, yet unpredictable in practice.</p>' },
+  { title: 'Things to try', html:
+    '<ul>' +
+    '<li>Raise the initial spread and the copies split sooner; lower it and they stay together longer, but they always diverge eventually.</li>' +
+    '<li>Start both arms near vertical (large start angles) for the most violent chaos.</li>' +
+    '<li>Lower the angles toward small values to find tame, almost regular swinging.</li>' +
+    '</ul>' },
+  { title: 'The takeaway', html:
+    '<p>You cannot tame chaos by measuring more carefully. Any uncertainty in the start, however small, grows until the prediction is useless. The same mechanism is why weather is hard to forecast far ahead.</p>' }
+]);
+
+reset(); loop();
+</script>
+</body></html>

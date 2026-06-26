@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2D Hopf bifurcation - interactive</title>
+<link rel="stylesheet" href="sim.css">
+<script src="plotly.min.js" charset="utf-8"></script>
+<script src="sim_lib.js"></script>
+</head><body>
+<header>
+  <a class="back" href="index.html">&larr; all simulations</a>
+  <h1>The Hopf bifurcation in 2D: birth of a limit cycle</h1>
+  <p>Slide mu through 0. A stable point loses stability and a limit cycle appears. Switch between the soft (supercritical) and hard (subcritical) versions.</p>
+</header>
+<div class="wrap">
+  <div id="plot"></div>
+  <div class="panel" id="panel"><h2>Controls</h2></div>
+</div>
+<script>
+const plot = document.getElementById('plot');
+const panel = document.getElementById('panel');
+const { COL, rk4, slider, button, row, note, readout } = SimLib;
+
+let type = 'super', mu = 0.3, omega = 1.2, stOut;
+const lin = (a, b, n) => { const o = []; for (let i = 0; i <= n; i++) o.push(a + (b - a) * i / n); return o; };
+
+// Cartesian form of the polar normal form r' = g(r) r, theta' = omega.
+function rhs(_, s) {
+  const x = s[0], y = s[1], r2 = x * x + y * y;
+  const g = type === 'super' ? (mu - r2) : (mu + r2 - r2 * r2);
+  return [g * x - omega * y, g * y + omega * x];
+}
+
+// Limit-cycle radii at this mu.
+function cycles(type, mu) {
+  if (type === 'super') return mu > 0 ? { stable: [Math.sqrt(mu)], unstable: [] } : { stable: [], unstable: [] };
+  const d = 1 + 4 * mu;
+  if (d < 0) return { stable: [], unstable: [] };
+  const up = (1 + Math.sqrt(d)) / 2, um = (1 - Math.sqrt(d)) / 2;
+  return { stable: up > 0 ? [Math.sqrt(up)] : [], unstable: um > 1e-9 ? [Math.sqrt(um)] : [] };
+}
+
+function ampBranches(type) {
+  const muNeg = lin(-1, 0, 120), muPos = lin(0, 1.5, 140);
+  const originS = { x: muNeg, y: muNeg.map(() => 0) };
+  const originU = { x: muPos, y: muPos.map(() => 0) };
+  if (type === 'super')
+    return { stable: [originS, { x: muPos, y: muPos.map(m => Math.sqrt(m)) }], unstable: [originU] };
+  const muO = lin(-0.25, 1.5, 160);
+  const outer = { x: muO, y: muO.map(m => Math.sqrt((1 + Math.sqrt(1 + 4 * m)) / 2)) };
+  const muI = lin(-0.25, 0, 90);
+  const inner = { x: muI, y: muI.map(m => Math.sqrt(Math.max(0, (1 - Math.sqrt(1 + 4 * m)) / 2))) };
+  return { stable: [originS, outer], unstable: [originU, inner] };
+}
+
+function ring(R, dash) {
+  const t = lin(0, 2 * Math.PI, 120);
+  return { x: t.map(a => R * Math.cos(a)), y: t.map(a => R * Math.sin(a)), mode: 'lines',
+    line: { color: dash ? COL.red : '#FFFFFF', width: 2, dash: dash ? 'dash' : 'solid' }, hoverinfo: 'skip' };
+}
+
+function trajectory(x0, y0) {
+  let s = [x0, y0]; const xs = [x0], ys = [y0];
+  for (let i = 0; i < 3600; i++) { s = rk4(rhs, 0, s, 0.012); xs.push(s[0]); ys.push(s[1]); }
+  return { x: xs, y: ys, mode: 'lines', line: { color: COL.cyan, width: 1 }, opacity: 0.5, hoverinfo: 'skip' };
+}
+
+function draw() {
+  const data = [];
+  const { stable, unstable } = ampBranches(type);
+
+  // top: amplitude diagram (axes x2, y2)
+  stable.forEach(b => data.push({ x: b.x, y: b.y, xaxis: 'x2', yaxis: 'y2', mode: 'lines',
+    line: { color: COL.teal, width: 3 }, hoverinfo: 'skip' }));
+  unstable.forEach(b => data.push({ x: b.x, y: b.y, xaxis: 'x2', yaxis: 'y2', mode: 'lines',
+    line: { color: COL.red, width: 2.5, dash: 'dash' }, hoverinfo: 'skip' }));
+  data.push({ x: [mu, mu], y: [-0.05, 1.6], xaxis: 'x2', yaxis: 'y2', mode: 'lines',
+    line: { color: COL.muted, width: 1.5, dash: 'dot' }, hoverinfo: 'skip' });
+
+  // bottom: phase portrait (axes x, y)
+  const ang = [0.4, 1.6, 2.9, 4.1, 5.4];
+  ang.forEach(a => data.push(trajectory(0.12 * Math.cos(a), 0.12 * Math.sin(a))));
+  ang.forEach(a => data.push(trajectory(1.85 * Math.cos(a), 1.85 * Math.sin(a))));
+  const cyc = cycles(type, mu);
+  cyc.unstable.forEach(R => data.push(ring(R, true)));
+  cyc.stable.forEach(R => data.push(ring(R, false)));
+  const originStable = mu < 0;
+  data.push({ x: [0], y: [0], mode: 'markers', marker: { size: 13,
+    color: originStable ? COL.teal : COL.bg, symbol: originStable ? 'circle' : 'circle-open',
+    line: { color: originStable ? '#FFFFFF' : COL.red, width: originStable ? 1.5 : 3 } }, hoverinfo: 'skip' });
+
+  const A = SimLib.axis;
+  const label = type === 'super' ? 'Supercritical Hopf:  dr/dt = mu r - r^3' : 'Subcritical Hopf:  dr/dt = mu r + r^3 - r^5';
+  const lay = SimLib.layout(label + '   (mu = ' + mu.toFixed(2) + ')', {
+    uirevision: 'keep',
+    xaxis2: A({ domain: [0, 1], anchor: 'y2', range: [-1, 1.5], title: 'parameter mu' }),
+    yaxis2: A({ domain: [0.72, 1.0], anchor: 'x2', range: [-0.05, 1.6], title: 'cycle amplitude' }),
+    xaxis: A({ domain: [0.2, 0.8], anchor: 'y', range: [-2, 2], title: 'x' }),
+    yaxis: A({ domain: [0, 0.62], anchor: 'x', range: [-2, 2], title: 'y', scaleanchor: 'x' }),
+    annotations: [
+      { x: 0, y: 1.0, xref: 'paper', yref: 'paper', yshift: 6,
+        text: 'amplitude diagram (solid = stable cycle/point, dashed = unstable)',
+        showarrow: false, font: { color: COL.muted, size: 12 }, xanchor: 'left' },
+      { x: 0.5, y: 0.64, xref: 'paper', yref: 'paper', yshift: 4,
+        text: 'phase plane: trajectories from inside and outside',
+        showarrow: false, font: { color: COL.muted, size: 12 }, xanchor: 'center' }]
+  });
+  Plotly.react(plot, data, lay, SimLib.config);
+
+  if (stOut) {
+    const cy = cycles(type, mu);
+    let t;
+    if (type === 'super')
+      t = mu < 0 ? 'stable point at the origin, no cycle' :
+        'origin unstable, one stable limit cycle at r = <b>' + cy.stable[0].toFixed(3) + '</b>';
+    else if (mu > 0)
+      t = 'origin unstable, one stable limit cycle at r = <b>' + cy.stable[0].toFixed(3) + '</b>';
+    else if (cy.unstable.length)
+      t = 'bistable: stable origin and stable cycle r = <b>' + cy.stable[0].toFixed(3) +
+          '</b>, split by an unstable cycle r = <b>' + cy.unstable[0].toFixed(3) + '</b>';
+    else t = 'only the stable origin (below the fold at mu = -0.25)';
+    stOut.innerHTML = t;
+  }
+}
+
+const buttons = {};
+function pick(t) { type = t; buttons.super.classList.toggle('active', t === 'super');
+  buttons.sub.classList.toggle('active', t === 'sub'); draw(); }
+
+slider(panel, { label: 'mu (Hopf parameter)', min: -1, max: 1.5, step: 0.01, value: mu, fmt: v => (+v).toFixed(2),
+  onInput: v => { mu = v; draw(); } });
+slider(panel, { label: 'omega (rotation rate)', min: 0.3, max: 3, step: 0.1, value: omega,
+  onInput: v => { omega = v; draw(); } });
+buttons.super = button(panel, 'Supercritical', () => pick('super'));
+buttons.sub = button(panel, 'Subcritical', () => pick('sub'));
+row(panel, [buttons.super, buttons.sub]);
+stOut = readout(panel);
+note(panel, 'White ring = stable limit cycle, red dashed ring = unstable cycle. Cyan curves start from a small inner ring and a large outer ring so you can see what each region flows toward.');
+
+SimLib.explain([
+  { title: 'What you are looking at', html:
+    '<p>A Hopf bifurcation is how a fixed point in two or more dimensions gives birth to an oscillation. Written in polar coordinates the amplitude obeys a 1D equation while the phase just rotates at rate omega, so the radius r behaves exactly like a pitchfork from the 1D lab.</p>' +
+    '<p>Top: the amplitude of any limit cycle versus mu. Bottom: the phase plane, with trajectories started near the origin and far out so you can see whether they spiral inward, outward, or onto a ring.</p>' },
+  { title: 'Supercritical (soft)', html:
+    '<p><code>dr/dt = mu r - r^3</code>. For mu &lt; 0 the origin is a stable spiral. At mu = 0 it loses stability and a stable limit cycle of radius sqrt(mu) grows continuously out of it. The oscillation amplitude rises smoothly from zero, so the onset is gentle and reversible.</p>' },
+  { title: 'Subcritical (hard)', html:
+    '<p><code>dr/dt = mu r + r^3 - r^5</code>. An unstable cycle shrinks onto the origin and destabilises it at mu = 0. There is a window mu in (-0.25, 0) where a stable origin and a large stable cycle coexist, separated by the unstable cycle. Crossing mu = 0 makes the state jump to the far cycle, and you must go back below the fold at mu = -0.25 to undo it: hysteresis.</p>' },
+  { title: 'Things to try', html:
+    '<ul>' +
+    '<li>Supercritical: sweep mu up from -1 and watch the white ring open from a point.</li>' +
+    '<li>Subcritical: park mu near -0.15 and see two attractors at once (inner curves fall to the origin, outer curves climb to the big ring).</li>' +
+    '<li>Raise omega to spin the trajectories faster without changing which attractor wins.</li>' +
+    '</ul>' }
+]);
+
+pick('super');
+</script>
+</body></html>

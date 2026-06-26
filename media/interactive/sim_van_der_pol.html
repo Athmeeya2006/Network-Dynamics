@@ -1,0 +1,123 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Van der Pol limit cycle - interactive</title>
+<link rel="stylesheet" href="sim.css">
+<script src="plotly.min.js" charset="utf-8"></script>
+<script src="sim_lib.js"></script>
+</head><body>
+<header>
+  <a class="back" href="index.html">&larr; all simulations</a>
+  <h1>Van der Pol: a limit cycle up close</h1>
+  <p>Every trajectory winds onto the same closed loop. Raise mu to turn a smooth oscillation into sharp relaxation spikes.</p>
+</header>
+<div class="wrap">
+  <div id="plot"></div>
+  <div class="panel" id="panel"><h2>Parameters</h2></div>
+</div>
+<script>
+const plot = document.getElementById('plot');
+const panel = document.getElementById('panel');
+const { COL, rk4, slider, button, row, note, readout } = SimLib;
+
+let mu = 1.0, speed = 1.0;
+const dt = 0.01, STEPS = 4000, trail = 170;
+let inner = [], outer = [], ymax = 3, idx = trail, playing = true, raf = null, perOut;
+
+function rhs(_, s) { const x = s[0], y = s[1]; return [y, mu * (1 - x * x) * y - x]; }
+
+function run(ic) {
+  let s = ic.slice(); const arr = [s.slice()];
+  for (let i = 0; i < STEPS; i++) { s = rk4(rhs, 0, s, dt); arr.push(s.slice()); }
+  return arr;
+}
+
+// One full period measured from the settled trajectory (upward zero crossings of x).
+function period(tr) {
+  const cross = [];
+  for (let i = STEPS - 1; i > STEPS / 2 && cross.length < 3; i--)
+    if (tr[i - 1][0] < 0 && tr[i][0] >= 0) cross.push(i);
+  return cross.length >= 2 ? (cross[0] - cross[1]) * dt : NaN;
+}
+
+function compute() {
+  inner = run([0.1, 0.1]); outer = run([2.6, 1.2]);
+  ymax = 1.1 * Math.max(3, ...inner.map(p => Math.abs(p[1])), ...outer.map(p => Math.abs(p[1])));
+  idx = trail; draw();
+  const P = period(inner);
+  if (perOut) perOut.innerHTML = 'period T = <b>' + (isNaN(P) ? '...' : P.toFixed(2)) + '</b> time units';
+}
+
+function draw() {
+  const fade = (tr, c) => ({ x: tr.map(p => p[0]), y: tr.map(p => p[1]), mode: 'lines',
+    line: { color: c, width: 1 }, opacity: 0.3, hoverinfo: 'skip' });
+  const data = [
+    fade(outer, COL.dim), fade(inner, COL.dim),
+    { x: [], y: [], mode: 'lines', line: { color: COL.teal, width: 3 }, hoverinfo: 'skip' },
+    { x: [inner[idx][0]], y: [inner[idx][1]], mode: 'markers',
+      marker: { size: 10, color: '#FFFFFF', line: { color: COL.teal, width: 1 } }, hoverinfo: 'skip' },
+    { x: inner.map((_, i) => i * dt), y: inner.map(p => p[0]), xaxis: 'x2', yaxis: 'y2', mode: 'lines',
+      line: { color: COL.gold, width: 2 }, opacity: 0.5, hoverinfo: 'skip' },
+    { x: [idx * dt], y: [inner[idx][0]], xaxis: 'x2', yaxis: 'y2', mode: 'markers',
+      marker: { size: 9, color: COL.gold, line: { color: '#FFFFFF', width: 1 } }, hoverinfo: 'skip' }
+  ];
+  const A = SimLib.axis;
+  const lay = SimLib.layout('Van der Pol oscillator  (mu = ' + mu.toFixed(2) + ')', {
+    uirevision: 'keep',
+    xaxis: A({ domain: [0, 0.46], anchor: 'y', range: [-2.7, 2.7], title: 'x' }),
+    yaxis: A({ domain: [0, 1], anchor: 'x', range: [-ymax, ymax], title: 'dx/dt', scaleanchor: false }),
+    xaxis2: A({ domain: [0.57, 1], anchor: 'y2', range: [0, STEPS * dt], title: 'time' }),
+    yaxis2: A({ domain: [0, 1], anchor: 'x2', range: [-2.7, 2.7], title: 'x(t)' }),
+    annotations: [
+      { x: 0.23, y: 1.0, xref: 'paper', yref: 'paper', yshift: 4, text: 'phase plane (the closed loop is the limit cycle)',
+        showarrow: false, font: { color: COL.muted, size: 12 }, xanchor: 'center' },
+      { x: 0.785, y: 1.0, xref: 'paper', yref: 'paper', yshift: 4, text: 'waveform x(t)',
+        showarrow: false, font: { color: COL.muted, size: 12 }, xanchor: 'center' }]
+  });
+  Plotly.react(plot, data, lay, SimLib.config);
+}
+
+function step() {
+  const adv = Math.max(1, Math.round(speed * 5));
+  idx += adv; if (idx >= STEPS) idx = trail;
+  const s = Math.max(0, idx - trail);
+  Plotly.restyle(plot, {
+    x: [inner.slice(s, idx + 1).map(p => p[0]), [inner[idx][0]], [idx * dt]],
+    y: [inner.slice(s, idx + 1).map(p => p[1]), [inner[idx][1]], [inner[idx][0]]]
+  }, [2, 3, 5]);
+}
+
+function loop() { if (!playing) return; step(); raf = requestAnimationFrame(loop); }
+function play() { if (playing) return; playing = true; loop(); }
+function pause() { playing = false; if (raf) cancelAnimationFrame(raf); }
+
+slider(panel, { label: 'mu (nonlinearity)', min: 0.05, max: 6, step: 0.05, value: mu,
+  onInput: v => { mu = v; compute(); } });
+slider(panel, { label: 'Speed', min: 0.3, max: 4, step: 0.1, value: speed, unit: '×',
+  onInput: v => { speed = v; } });
+row(panel, [button(panel, '▶ Play', play), button(panel, '❚❚ Pause', pause)]);
+perOut = readout(panel);
+note(panel, 'x\'\' - mu(1 - x^2) x\' + x = 0. Small mu gives a near-circular orbit and an almost sinusoidal x(t); large mu gives a stiff loop and a spiky waveform (slow drift, fast jump).');
+
+SimLib.explain([
+  { title: 'What a limit cycle is', html:
+    '<p>A limit cycle is an isolated closed orbit that nearby trajectories spiral onto. It is the signature of self-sustained oscillation: unlike the neutral circles of a linear centre, its amplitude and period are set by the equation itself, not by where you start.</p>' +
+    '<p>Two trajectories are drawn faintly here, one launched from inside the loop and one from outside. Both wind onto the same teal cycle, which is what makes it an attractor.</p>' },
+  { title: 'The negative-damping idea', html:
+    '<p>The term <code>mu(1 - x^2) x\'</code> is the engine. For small |x| it is positive (anti-damping) so small oscillations grow; for large |x| it is negative (damping) so big oscillations shrink. The balance point is the cycle. This is the same mechanism behind heartbeats, neuron firing and electronic oscillators.</p>' },
+  { title: 'Harmonic vs relaxation', html:
+    '<ul>' +
+    '<li>mu near 0: the loop is almost a circle and x(t) is almost a sine wave with period about 2 pi.</li>' +
+    '<li>mu large: the system creeps along a slow branch then jumps fast, giving the spiky relaxation waveform. The period grows roughly linearly with mu.</li>' +
+    '</ul>' +
+    '<p>Watch the measured period in the panel climb as you push mu up.</p>' },
+  { title: 'Things to try', html:
+    '<ul>' +
+    '<li>Set mu = 0.1 and note the smooth, circular, sinusoidal motion.</li>' +
+    '<li>Set mu = 5 and watch the waveform develop sharp jumps while the phase loop squares off.</li>' +
+    '<li>The two faint spirals confirm the cycle attracts from both inside and outside.</li>' +
+    '</ul>' }
+]);
+
+compute(); loop();
+</script>
+</body></html>

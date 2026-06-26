@@ -1,7 +1,7 @@
 """
 m4d_powerlaw_fitting.py
 =======================
-Module 4d - Clauset-Shalizi-Newman power-law fitting vs naive OLS.
+Module 4d: Clauset-Shalizi-Newman power-law fitting vs naive OLS.
 
 Proof verified:
     The maximum-likelihood estimator (with KS-selected x_min) of Clauset,
@@ -36,7 +36,7 @@ from src.powerlaw_fit import (fit_powerlaw, sample_discrete_powerlaw,
 np.random.seed(42)
 setup_light_theme()
 
-# ── Synthetic discrete power law with KNOWN exponent ─────────────────────────
+# Synthetic discrete power law with KNOWN exponent
 ALPHA_TRUE = 2.5
 XMIN_TRUE = 4
 N = 10000
@@ -45,22 +45,22 @@ print(f"Sampling {N} points from a discrete power law "
       f"(alpha={ALPHA_TRUE}, xmin={XMIN_TRUE})...")
 data = sample_discrete_powerlaw(ALPHA_TRUE, XMIN_TRUE, N, rng)
 
-# ── Clauset MLE fit ───────────────────────────────────────────────────────────
+# Clauset MLE fit
 fit = fit_powerlaw(data, xmin_max=20)
 alpha_mle, xmin_hat = fit['alpha'], fit['xmin']
 print(f"Clauset MLE: alpha={alpha_mle:.3f}, xmin={xmin_hat}, D={fit['D']:.4f}")
 
-# ── Naive OLS on the log-log CCDF (above the fitted xmin) ─────────────────────
+# Naive OLS on the log-log CCDF (above the fitted xmin)
 alpha_ols, intercept, slope = ols_exponent(data, xmin=xmin_hat)
 print(f"Naive OLS:   alpha={alpha_ols:.3f}")
 
-# ── Bootstrap goodness-of-fit p-value ────────────────────────────────────────
+# Bootstrap goodness-of-fit p-value
 print("Running semiparametric bootstrap (this takes a moment)...")
 pval = bootstrap_pvalue(data, fit, n_boot=200, seed=7, xmin_max=20)
 print(f"Bootstrap p-value: {pval:.3f}")
 
 
-# ── Empirical CCDF and fitted curves ─────────────────────────────────────────
+# Empirical CCDF and fitted curves
 def ccdf(d):
     d = np.asarray(d)
     xs = np.sort(np.unique(d))
@@ -80,7 +80,7 @@ ccdf_mle = zeta(alpha_mle, x_model) / zeta(alpha_mle, xmin_hat) * c_at_xmin
 x_ols = xs[tail]
 ccdf_ols = np.exp(intercept) * x_ols ** slope
 
-# ── Figure ────────────────────────────────────────────────────────────────────
+# Figure
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6.5))
 fig.patch.set_facecolor("#F8FAFC")
 
@@ -114,16 +114,16 @@ for b, v, e in zip(bars, [ALPHA_TRUE, alpha_mle, alpha_ols], [0, err_mle, err_ol
     ax2.text(b.get_x() + b.get_width() / 2, v + 0.05, lbl, ha='center',
              va='bottom', fontsize=10, color=NAVY)
 
-fig.suptitle('Module 4d - Clauset MLE recovers the exponent; OLS is biased',
+fig.suptitle('Module 4d: Clauset MLE recovers the exponent; OLS is biased',
              fontsize=16, color=NAVY, fontweight='bold', y=1.0)
 plt.tight_layout()
 
-# ── VERIFY ────────────────────────────────────────────────────────────────────
+# VERIFY
 ok_mle = err_mle < 0.05
 ok_bias = err_ols > err_mle
 ok_p = pval > 0.1
 print("=" * 70)
-print("VERIFY - Clauset MLE vs OLS on synthetic power law:")
+print("VERIFY: Clauset MLE vs OLS on synthetic power law:")
 print(f"  true alpha          = {ALPHA_TRUE:.3f}")
 print(f"  MLE  alpha          = {alpha_mle:.3f}  (err {err_mle:.3f}, <0.05) "
       f"{'PASS' if ok_mle else 'FAIL'}")

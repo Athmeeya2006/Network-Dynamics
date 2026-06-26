@@ -1,0 +1,115 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Linear phase portrait - interactive</title>
+<link rel="stylesheet" href="sim.css">
+<script src="plotly.min.js" charset="utf-8"></script>
+<script src="sim_lib.js"></script>
+</head><body>
+<header>
+  <a class="back" href="index.html">&larr; all simulations</a>
+  <h1>2-D linear phase portrait</h1>
+  <p>Tune the matrix [[a,b],[c,d]] and watch particles flow. Node, spiral, saddle or centre.</p>
+</header>
+<div class="wrap">
+  <div id="plot"></div>
+  <div class="panel" id="panel"><h2>Matrix entries</h2></div>
+</div>
+<script>
+const plot = document.getElementById('plot');
+const panel = document.getElementById('panel');
+const { COL, rk4, slider, button, row, note, readout } = SimLib;
+
+let a = -0.3, b = -1.1, c = 1.1, d = -0.3, speed = 1.0;
+const M = 200, dt = 0.04, LIM = 3.2;
+let P = [], cols = [], playing = true, raf = null, clsOut;
+
+function field(_, s) { return [a * s[0] + b * s[1], c * s[0] + d * s[1]]; }
+
+function classify() {
+  const tr = a + d, det = a * d - b * c, disc = tr * tr - 4 * det;
+  if (det < 0) return 'saddle (unstable)';
+  if (Math.abs(tr) < 1e-6) return det > 0 ? 'centre' : 'saddle';
+  const stab = tr < 0 ? 'stable' : 'unstable';
+  return (disc < 0 ? 'spiral ' : 'node ') + '(' + stab + ')';
+}
+
+function seed() {
+  P = []; cols = [];
+  for (let i = 0; i < M; i++) {
+    P.push([(Math.random() * 2 - 1) * LIM, (Math.random() * 2 - 1) * LIM]);
+    cols.push(SimLib.rainbow(i, M));
+  }
+  P.sort((u, v) => Math.atan2(u[1], u[0]) - Math.atan2(v[1], v[0]));
+}
+
+function quiver() {
+  const xs = [], ys = []; const n = 17, h = 2 * LIM / (n - 1);
+  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+    const x = -LIM + i * h, y = -LIM + j * h;
+    const vx = a * x + b * y, vy = c * x + d * y;
+    const m = Math.hypot(vx, vy) || 1, sc = 0.16;
+    xs.push(x, x + sc * vx / m, null); ys.push(y, y + sc * vy / m, null);
+  }
+  return { x: xs, y: ys, mode: 'lines', line: { color: COL.dim, width: 1 }, hoverinfo: 'skip' };
+}
+
+function draw() {
+  const dots = { x: P.map(p => p[0]), y: P.map(p => p[1]), mode: 'markers',
+                 marker: { size: 6, color: cols }, hoverinfo: 'skip' };
+  const lay = SimLib.layout('Phase portrait',
+    { uirevision: 'keep', xaxis: { range: [-LIM, LIM], color: COL.muted, gridcolor: COL.dim, title: 'x' },
+      yaxis: { range: [-LIM, LIM], color: COL.muted, gridcolor: COL.dim, title: 'y', scaleanchor: 'x' } });
+  Plotly.react(plot, [quiver(), dots], lay, SimLib.config);
+  if (clsOut) clsOut.innerHTML = 'fixed point: <b>' + classify() + '</b>';
+}
+
+function step() {
+  const subs = Math.max(1, Math.round(speed * 1));
+  for (let k = 0; k < subs; k++)
+    for (let i = 0; i < P.length; i++) {
+      P[i] = rk4(field, 0, P[i], dt);
+      if (Math.abs(P[i][0]) > LIM || Math.abs(P[i][1]) > LIM || Math.hypot(P[i][0], P[i][1]) < 0.04)
+        P[i] = [(Math.random() * 2 - 1) * LIM, (Math.random() * 2 - 1) * LIM];
+    }
+  Plotly.restyle(plot, { x: [P.map(p => p[0])], y: [P.map(p => p[1])] }, [1]);
+}
+
+function loop() { if (!playing) return; step(); raf = requestAnimationFrame(loop); }
+function play() { if (playing) return; playing = true; loop(); }
+function pause() { playing = false; if (raf) cancelAnimationFrame(raf); }
+
+slider(panel, { label: 'a', min: -2, max: 2, step: 0.05, value: a, onInput: v => { a = v; draw(); } });
+slider(panel, { label: 'b', min: -2, max: 2, step: 0.05, value: b, onInput: v => { b = v; draw(); } });
+slider(panel, { label: 'c', min: -2, max: 2, step: 0.05, value: c, onInput: v => { c = v; draw(); } });
+slider(panel, { label: 'd', min: -2, max: 2, step: 0.05, value: d, onInput: v => { d = v; draw(); } });
+slider(panel, { label: 'Speed', min: 0.3, max: 4, step: 0.1, value: speed, unit: '×',
+  onInput: v => { speed = v; } });
+row(panel, [button(panel, '▶ Play', play), button(panel, '❚❚ Pause', pause),
+            button(panel, '↻ Reseed', () => { seed(); }, 'alt')]);
+clsOut = readout(panel);
+note(panel, 'x\' = a x + b y, y\' = c x + d y. The trace a+d and determinant ad-bc decide the type: node, spiral, saddle or centre.');
+
+SimLib.explain([
+  { title: 'What you are looking at', html:
+    '<p>A linear 2D system <code>x\' = A x</code> has one fixed point at the origin. Hundreds of coloured particles are released and advected along the flow so you can see its shape. The grey arrows are the vector field itself.</p>' +
+    '<p>The whole behaviour is fixed by two numbers of the matrix A: its trace and its determinant.</p>' },
+  { title: 'Trace and determinant', html:
+    '<p>The eigenvalues solve <code>lambda^2 - (tr)lambda + det = 0</code>. The sign of the determinant, the sign of the trace, and the discriminant <code>tr^2 - 4 det</code> place the system in one of the regions of the trace-determinant plane.</p>' +
+    '<ul>' +
+    '<li>det &lt; 0: saddle (always unstable).</li>' +
+    '<li>det &gt; 0, tr^2 &gt; 4 det: node; tr^2 &lt; 4 det: spiral.</li>' +
+    '<li>tr &lt; 0 stable, tr &gt; 0 unstable; tr = 0 with det &gt; 0: a centre.</li>' +
+    '</ul>' },
+  { title: 'Things to try', html:
+    '<ul>' +
+    '<li>Set b and c to opposite signs (say -1 and 1) and lower |a|,|d| toward 0 to pass from stable spiral to centre to unstable spiral.</li>' +
+    '<li>Make a and d positive: every particle flies outward (unstable node or spiral).</li>' +
+    '<li>Set det negative (for example a = 1, d = -2): the saddle sends particles in along one direction and out along another.</li>' +
+    '</ul>' },
+  { title: 'Why it matters', html:
+    '<p>Any nonlinear system, linearised at a fixed point, looks locally like this. Reading off the trace and determinant of the Jacobian is the first thing you do to classify a fixed point in higher dimensions.</p>' }
+]);
+
+seed(); draw(); loop();
+</script>
+</body></html>

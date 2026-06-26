@@ -1,7 +1,7 @@
 """
 m3c_rps_on_network.py
 =====================
-Module 3c - Rock-Paper-Scissors on Networks (the bridge to Modules 4 & 5).
+Module 3c: Rock-Paper-Scissors on Networks.
 
 Proof verified:
     Imitation (Fermi) dynamics of neutral RPS on a finite network is NOT
@@ -38,7 +38,7 @@ from src.games import rps_payoff, network_rps_step
 np.random.seed(42)
 setup_light_theme()
 
-# ── Parameters ───────────────────────────────────────────────────────────────
+# Parameters
 N = 200
 n_sweeps = 150
 n_runs = 250
@@ -51,7 +51,7 @@ G_er = nx.erdos_renyi_graph(N, p=0.06, seed=42)
 G_ba = nx.barabasi_albert_graph(N, m=3, seed=42)
 
 
-# ── Simulation: one realization, return per-sweep fractions ──────────────────
+# Simulation: one realization, return per-sweep fractions
 def run_once(G, seed):
     rng = np.random.default_rng(seed)
     strategies = rng.integers(0, 3, size=N)
@@ -75,7 +75,7 @@ def run_ensemble(G, label):
 runs_er, ens_er, dom_er, final_er = run_ensemble(G_er, "Erdos-Renyi")
 runs_ba, ens_ba, dom_ba, final_ba = run_ensemble(G_ba, "Barabasi-Albert")
 
-# ── Figure Layout (2x2) ──────────────────────────────────────────────────────
+# Figure Layout (2x2)
 fig, axes = plt.subplots(2, 2, figsize=(16, 11))
 fig.patch.set_facecolor("#F8FAFC")
 colors = [RED, TEAL, GOLD]
@@ -123,11 +123,11 @@ ax.set_ylabel('Count of runs', color=NAVY)
 ax.set_title('Per-run outcomes cluster near fixation', color=NAVY, fontweight='bold')
 ax.legend(fontsize=9, framealpha=0.95, facecolor='white', edgecolor=SLATE)
 
-fig.suptitle('Module 3c - Rock-Paper-Scissors on Networks: per-run fixation, ensemble symmetry',
+fig.suptitle('Module 3c: Rock-Paper-Scissors on Networks: per-run fixation, ensemble symmetry',
              fontsize=16, color=NAVY, fontweight='bold', y=1.0)
 plt.tight_layout()
 
-# ── VERIFY ────────────────────────────────────────────────────────────────────
+# VERIFY
 err_er = np.abs(final_er - 1 / 3)
 err_ba = np.abs(final_ba - 1 / 3)
 ens_ok = max(err_er.max(), err_ba.max()) < 0.05
@@ -135,7 +135,7 @@ fix_ok = dom_er[-1] > 0.9 and dom_ba[-1] > 0.9
 ba_faster = dom_ba[-1] >= dom_er[-1] - 1e-9
 
 print("=" * 70)
-print(f"VERIFY - RPS imitation dynamics on networks ({n_runs} runs each):")
+print(f"VERIFY: RPS imitation dynamics on networks ({n_runs} runs each):")
 print("  (1) Ensemble-mean final fractions  -> Nash (1/3, 1/3, 1/3):")
 print(f"      ER: Rock {final_er[0]:.4f}, Paper {final_er[1]:.4f}, "
       f"Scissors {final_er[2]:.4f}  (max dev {err_er.max():.4f})")

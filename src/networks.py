@@ -31,9 +31,7 @@ import numpy as np
 import networkx as nx
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # ER GENERATOR (Batagelj-Brandes, ported from Erdos-Renyi-Contagion/src/fast_er.py)
-# ═══════════════════════════════════════════════════════════════════════════════
 
 def _index_to_pair(e: int) -> tuple[int, int]:
     """Decode a flat upper-triangle edge index e to a vertex pair (i, j), i<j."""
@@ -105,9 +103,7 @@ def er_graph(n: int, p: float, seed: int | None = None) -> nx.Graph:
     return G
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # OTHER GENERATORS (thin networkx wrappers, consistent signatures)
-# ═══════════════════════════════════════════════════════════════════════════════
 
 def ba_graph(n: int, m: int, seed: int | None = None) -> nx.Graph:
     """Barabasi-Albert preferential-attachment graph (p(k) ~ k^-3)."""
@@ -135,9 +131,7 @@ def ring_lattice(n: int, k: int) -> nx.Graph:
     return nx.watts_strogatz_graph(n, k, 0.0)
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # SPECTRA / LAPLACIANS
-# ═══════════════════════════════════════════════════════════════════════════════
 
 def giant_component(G: nx.Graph) -> nx.Graph:
     """Return the largest connected component as a relabelled copy (0..n-1)."""
@@ -193,9 +187,7 @@ def eigenratio(G: nx.Graph, normalized: bool = False) -> float:
     return float(ev[-1] / nonzero[0])
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # CENTRALITIES
-# ═══════════════════════════════════════════════════════════════════════════════
 
 def centralities(G: nx.Graph) -> dict[str, dict]:
     """
@@ -233,9 +225,7 @@ def centrality_vector(cdict: dict, nodes=None) -> np.ndarray:
     return np.array([cdict[v] for v in nodes])
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # STRUCTURAL METRICS
-# ═══════════════════════════════════════════════════════════════════════════════
 
 def degree_sequence(G: nx.Graph) -> np.ndarray:
     """Degree sequence as an integer array."""

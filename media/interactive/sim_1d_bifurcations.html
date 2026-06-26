@@ -1,0 +1,179 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1D bifurcations - interactive</title>
+<link rel="stylesheet" href="sim.css">
+<script src="plotly.min.js" charset="utf-8"></script>
+<script src="sim_lib.js"></script>
+</head><body>
+<header>
+  <a class="back" href="index.html">&larr; all simulations</a>
+  <h1>Bifurcations of a one-dimensional flow</h1>
+  <p>Pick one of the four normal forms, then slide the parameter r and watch fixed points appear, collide and swap stability.</p>
+</header>
+<div class="wrap">
+  <div id="plot"></div>
+  <div class="panel" id="panel"><h2>Controls</h2></div>
+</div>
+<script>
+const plot = document.getElementById('plot');
+const panel = document.getElementById('panel');
+const { COL, slider, button, row, note, readout } = SimLib;
+
+const TYPES = {
+  sn: { name: 'Saddle-node',             form: "x' = r + x^2" },
+  tc: { name: 'Transcritical',           form: "x' = r x - x^2" },
+  sp: { name: 'Supercritical pitchfork', form: "x' = r x - x^3" },
+  sb: { name: 'Subcritical pitchfork',   form: "x' = r x + x^3" },
+};
+function fval(type, x, r) {
+  if (type === 'sn') return r + x * x;
+  if (type === 'tc') return r * x - x * x;
+  if (type === 'sp') return r * x - x * x * x;
+  return r * x + x * x * x;                       // sb
+}
+
+let type = 'sp', r = 0.8, fpOut;
+const lin = (a, b, n) => { const o = []; for (let i = 0; i <= n; i++) o.push(a + (b - a) * i / n); return o; };
+
+// Fixed points and their stability at the current r (f'(x*) < 0 means stable).
+function fixedPoints(type, r) {
+  const p = [];
+  if (type === 'sn') {
+    if (r <= 0) { const s = Math.sqrt(-r); p.push({ x: -s, stable: true });
+                  if (s > 1e-6) p.push({ x: s, stable: false }); }
+  } else if (type === 'tc') {
+    p.push({ x: 0, stable: r < 0 });
+    if (Math.abs(r) > 1e-6) p.push({ x: r, stable: r > 0 });
+  } else if (type === 'sp') {
+    p.push({ x: 0, stable: r < 0 });
+    if (r > 0) { const s = Math.sqrt(r); p.push({ x: s, stable: true }); p.push({ x: -s, stable: true }); }
+  } else {
+    p.push({ x: 0, stable: r < 0 });
+    if (r < 0) { const s = Math.sqrt(-r); p.push({ x: s, stable: false }); p.push({ x: -s, stable: false }); }
+  }
+  return p;
+}
+
+// Stable / unstable branch polylines for the bifurcation diagram.
+function branches(type) {
+  const stable = [], unstable = [], rn = lin(-2, 0, 160), rp = lin(0, 2, 160);
+  if (type === 'sn') {
+    stable.push({ r: rn, x: rn.map(v => -Math.sqrt(-v)) });
+    unstable.push({ r: rn, x: rn.map(v => Math.sqrt(-v)) });
+  } else if (type === 'tc') {
+    stable.push({ r: rn, x: rn.map(() => 0) });
+    stable.push({ r: rp, x: rp.slice() });
+    unstable.push({ r: rp, x: rp.map(() => 0) });
+    unstable.push({ r: rn, x: rn.slice() });
+  } else if (type === 'sp') {
+    stable.push({ r: rn, x: rn.map(() => 0) });
+    stable.push({ r: rp, x: rp.map(v => Math.sqrt(v)) });
+    stable.push({ r: rp, x: rp.map(v => -Math.sqrt(v)) });
+    unstable.push({ r: rp, x: rp.map(() => 0) });
+  } else {
+    stable.push({ r: rn, x: rn.map(() => 0) });
+    unstable.push({ r: rp, x: rp.map(() => 0) });
+    unstable.push({ r: rn, x: rn.map(v => Math.sqrt(-v)) });
+    unstable.push({ r: rn, x: rn.map(v => -Math.sqrt(-v)) });
+  }
+  return { stable, unstable };
+}
+
+function draw() {
+  const T = TYPES[type], fp = fixedPoints(type, r), { stable, unstable } = branches(type);
+  const data = [];
+
+  // --- top panel: bifurcation diagram (axes x2, y2) ---
+  stable.forEach(b => data.push({ x: b.r, y: b.x, xaxis: 'x2', yaxis: 'y2', mode: 'lines',
+    line: { color: COL.teal, width: 3 }, hoverinfo: 'skip' }));
+  unstable.forEach(b => data.push({ x: b.r, y: b.x, xaxis: 'x2', yaxis: 'y2', mode: 'lines',
+    line: { color: COL.red, width: 2.5, dash: 'dash' }, hoverinfo: 'skip' }));
+  data.push({ x: [r, r], y: [-2.2, 2.2], xaxis: 'x2', yaxis: 'y2', mode: 'lines',
+    line: { color: COL.muted, width: 1.5, dash: 'dot' }, hoverinfo: 'skip' });
+  data.push({ x: fp.filter(p => p.stable).map(() => r), y: fp.filter(p => p.stable).map(p => p.x),
+    xaxis: 'x2', yaxis: 'y2', mode: 'markers',
+    marker: { size: 13, color: COL.teal, line: { color: '#FFFFFF', width: 1.5 } }, hoverinfo: 'skip' });
+  data.push({ x: fp.filter(p => !p.stable).map(() => r), y: fp.filter(p => !p.stable).map(p => p.x),
+    xaxis: 'x2', yaxis: 'y2', mode: 'markers',
+    marker: { size: 13, color: COL.bg, symbol: 'circle-open', line: { color: COL.red, width: 3 } },
+    hoverinfo: 'skip' });
+
+  // --- bottom panel: flow on the line, rate f(x) vs x (axes x, y) ---
+  const xg = lin(-2.1, 2.1, 240);
+  data.push({ x: xg, y: xg.map(x => fval(type, x, r)), mode: 'lines',
+    line: { color: COL.gold, width: 3 }, hoverinfo: 'skip' });
+  const ax = [], asym = [], acol = [];
+  for (let i = 0; i <= 26; i++) {
+    const x = -2.0 + 4.0 * i / 26, v = fval(type, x, r);
+    if (Math.abs(v) < 0.06) continue;
+    ax.push(x); asym.push(v > 0 ? 'triangle-right' : 'triangle-left'); acol.push(v > 0 ? COL.teal : COL.red);
+  }
+  data.push({ x: ax, y: ax.map(() => 0), mode: 'markers',
+    marker: { size: 11, color: acol, symbol: asym }, hoverinfo: 'skip' });
+  data.push({ x: fp.filter(p => p.stable).map(p => p.x), y: fp.filter(p => p.stable).map(() => 0),
+    mode: 'markers', marker: { size: 15, color: COL.teal, line: { color: '#FFFFFF', width: 1.5 } },
+    hoverinfo: 'skip' });
+  data.push({ x: fp.filter(p => !p.stable).map(p => p.x), y: fp.filter(p => !p.stable).map(() => 0),
+    mode: 'markers', marker: { size: 15, color: COL.bg, symbol: 'circle-open', line: { color: COL.red, width: 3 } },
+    hoverinfo: 'skip' });
+
+  const A = SimLib.axis;
+  const lay = SimLib.layout(T.name + ':  ' + T.form + '   (r = ' + r.toFixed(2) + ')', {
+    uirevision: 'keep',
+    xaxis2: A({ domain: [0, 1], anchor: 'y2', range: [-2, 2], title: 'parameter r' }),
+    yaxis2: A({ domain: [0.56, 1.0], anchor: 'x2', range: [-2, 2], title: 'fixed points x*' }),
+    xaxis: A({ domain: [0, 1], anchor: 'y', range: [-2.1, 2.1], title: 'state x' }),
+    yaxis: A({ domain: [0, 0.40], anchor: 'x', range: [-2.5, 2.5], title: 'rate  dx/dt' }),
+    annotations: [
+      { x: 0, y: 1.0, xref: 'paper', yref: 'paper', yshift: 6, text: 'bifurcation diagram (solid = stable, dashed = unstable)',
+        showarrow: false, font: { color: COL.muted, size: 12 }, xanchor: 'left' },
+      { x: 0, y: 0.43, xref: 'paper', yref: 'paper', yshift: 6, text: 'flow on the line at this r (arrows = direction of motion)',
+        showarrow: false, font: { color: COL.muted, size: 12 }, xanchor: 'left' }]
+  });
+  Plotly.react(plot, data, lay, SimLib.config);
+
+  if (fpOut) {
+    const txt = fp.length === 0 ? 'no fixed points (state runs off to infinity)'
+      : fp.map(p => 'x* = <b>' + p.x.toFixed(3) + '</b> (' + (p.stable ? 'stable' : 'unstable') + ')').join('<br>');
+    fpOut.innerHTML = txt;
+  }
+}
+
+const buttons = {};
+function pick(t) { type = t; Object.keys(buttons).forEach(k => buttons[k].classList.toggle('active', k === t)); draw(); }
+
+slider(panel, { label: 'Parameter r', min: -2, max: 2, step: 0.01, value: r, fmt: v => (+v).toFixed(2),
+  onInput: v => { r = v; draw(); } });
+buttons.sn = button(panel, 'Saddle-node', () => pick('sn'));
+buttons.tc = button(panel, 'Transcritical', () => pick('tc'));
+buttons.sp = button(panel, 'Pitchfork (super)', () => pick('sp'));
+buttons.sb = button(panel, 'Pitchfork (sub)', () => pick('sb'));
+row(panel, [buttons.sn, buttons.tc]);
+row(panel, [buttons.sp, buttons.sb]);
+fpOut = readout(panel);
+note(panel, 'Solid dot = stable fixed point, open dot = unstable. The arrows on the lower axis show which way x moves: right where dx/dt is positive, left where it is negative.');
+
+SimLib.explain([
+  { title: 'What you are looking at', html:
+    '<p>A one-dimensional system <code>dx/dt = f(x)</code> can only do two things: sit at a fixed point or slide monotonically toward one. A <b>bifurcation</b> is a value of the parameter r where the number or stability of those fixed points changes.</p>' +
+    '<p>Top panel: the <b>bifurcation diagram</b>, every fixed point x* plotted against r. Bottom panel: the <b>flow on the line</b> at the r you selected. A fixed point is where the gold curve crosses zero; it is stable if the curve crosses downward (flow points inward from both sides).</p>' },
+  { title: 'The four normal forms', html:
+    '<ul>' +
+    '<li><b>Saddle-node</b> <code>r + x^2</code>: two fixed points exist for r &lt; 0, collide at r = 0 and vanish. Creation of fixed points out of nothing.</li>' +
+    '<li><b>Transcritical</b> <code>r x - x^2</code>: two fixed points always exist; at r = 0 they cross and exchange stability.</li>' +
+    '<li><b>Supercritical pitchfork</b> <code>r x - x^3</code>: one stable point splits into two stable points (soft, continuous symmetry breaking).</li>' +
+    '<li><b>Subcritical pitchfork</b> <code>r x + x^3</code>: the outer branches are unstable, so the state jumps away once r passes 0 (hard transition).</li>' +
+    '</ul>' },
+  { title: 'Things to try', html:
+    '<ul>' +
+    '<li>On the saddle-node, slide r up through 0 and watch the stable and unstable dots merge then disappear.</li>' +
+    '<li>On the transcritical, stop at r = 0: both fixed points sit at the origin, then trade roles.</li>' +
+    '<li>Compare the two pitchforks: super opens two <b>solid</b> branches for r &gt; 0, sub opens two <b>dashed</b> branches for r &lt; 0.</li>' +
+    '</ul>' },
+  { title: 'Why it matters', html:
+    '<p>These four are the complete list of generic bifurcations a single variable can undergo. Every higher-dimensional local bifurcation (including the Hopf bifurcation in the 2D lab) reduces near onset to one of these forms on its centre manifold, so they are the alphabet of nonlinear transitions.</p>' }
+]);
+
+pick('sp');
+</script>
+</body></html>

@@ -1,7 +1,7 @@
 """
 m5d_explosive_synchronization.py
 ================================
-Module 5d - Explosive synchronisation (the lab payoff).
+Module 5d: Explosive synchronisation.
 
 Proof verified (Gomez-Gardenes, Gomez, Arenas & Moreno, PRL 2011):
     On a scale-free network, correlating each oscillator's natural frequency
@@ -34,7 +34,7 @@ from src.kuramoto import network_rhs, adiabatic_sweep
 np.random.seed(42)
 setup_light_theme()
 
-# ── Scale-free substrate ─────────────────────────────────────────────────────
+# Scale-free substrate
 N = 500
 G = ba_graph(N, m=3, seed=42)
 A = adjacency_matrix(G)
@@ -65,7 +65,7 @@ ru_c, rd_c, area_c, jump_c = hysteresis(omega_corr, "correlated")
 print("Continuous (shuffled frequencies):")
 ru_s, rd_s, area_s, jump_s = hysteresis(omega_shuf, "shuffled")
 
-# ── Figure ────────────────────────────────────────────────────────────────────
+# Figure
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6.8), sharey=True)
 fig.patch.set_facecolor("#F8FAFC")
 
@@ -93,15 +93,15 @@ ax2.set_title(rf'Shuffled $\omega$ - SECOND ORDER'
 ax2.legend(fontsize=10, framealpha=0.95, facecolor='white', edgecolor=SLATE, loc='upper left')
 ax2.set_ylim(-0.02, 1.0)
 
-fig.suptitle('Module 5d - Explosive synchronisation: degree-frequency correlation '
+fig.suptitle('Module 5d: Explosive synchronisation: degree-frequency correlation '
              'makes the transition first-order',
              fontsize=15, color=NAVY, fontweight='bold', y=1.0)
 plt.tight_layout()
 
-# ── VERIFY ────────────────────────────────────────────────────────────────────
+# VERIFY
 ok = (area_c > 0.1) and (jump_c > 0.3) and (area_s < area_c / 3)
 print("=" * 70)
-print("VERIFY - explosive synchronisation (first-order + hysteresis):")
+print("VERIFY: explosive synchronisation (first-order + hysteresis):")
 print(f"  correlated (omega=k):  hysteresis area = {area_c:.4f}, "
       f"max forward jump = {jump_c:.3f}")
 print(f"  shuffled  (random):    hysteresis area = {area_s:.4f}, "

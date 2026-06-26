@@ -1,7 +1,7 @@
 """
 m3b_spatial_rps.py
 ==================
-Module 3b - Spatial Rock-Paper-Scissors (Reichenbach-Mobilia-Frey model).
+Module 3b: Spatial Rock-Paper-Scissors (Reichenbach-Mobilia-Frey model).
 
 Proof verified:
     In the RMF mobility model, the exchange (mobility) rate M controls the
@@ -44,7 +44,7 @@ from src.games import spatial_rps_step, spatial_structure
 np.random.seed(42)
 setup_light_theme()
 
-# ── Parameters ───────────────────────────────────────────────────────────────
+# Parameters
 L = 100            # lattice size for the snapshot panels
 n_steps = 180      # Monte Carlo sweeps
 cmap = ListedColormap(['#E2E8F0', RED, TEAL, GOLD])  # empty, Rock, Paper, Scissors
@@ -64,7 +64,7 @@ def run_lattice(L, n_steps, M, seed, track_abundance=False):
     return grid
 
 
-# ── Hero snapshots: spirals (low M) vs homogenised (high M) ──────────────────
+# Hero snapshots: spirals (low M) vs homogenised (high M)
 M_low, M_high = 0.8, 60.0
 print(f"Low-mobility lattice (M={M_low}, spiral waves)...")
 grid_low, ab_low = run_lattice(L, n_steps, M_low, seed=42, track_abundance=True)
@@ -76,7 +76,7 @@ S_high = spatial_structure(grid_high)
 final_low = ab_low[-1]
 survivors_low = int(np.sum(final_low > 0.001))
 
-# ── Mobility sweep: structure order parameter S(M) ───────────────────────────
+# Mobility sweep: structure order parameter S(M)
 M_sweep = np.array([0.5, 2.0, 8.0, 32.0, 128.0])
 n_seeds = 3
 Ls = 80
@@ -88,7 +88,7 @@ for i, M in enumerate(M_sweep):
     S_mean[i] = np.mean(vals)
     S_err[i] = np.std(vals)
 
-# ── Figure (2x2) ─────────────────────────────────────────────────────────────
+# Figure (2x2)
 fig, axes = plt.subplots(2, 2, figsize=(15, 12))
 fig.patch.set_facecolor("#F8FAFC")
 
@@ -138,11 +138,11 @@ ax.set_title('Homogenisation transition: $S(M)$ collapses',
              color=NAVY, fontweight='bold')
 ax.legend(fontsize=10, framealpha=0.95, facecolor='white', edgecolor=SLATE)
 
-fig.suptitle('Module 3b - Spatial Rock-Paper-Scissors: spirals, coexistence, and homogenisation',
+fig.suptitle('Module 3b: Spatial Rock-Paper-Scissors: spirals, coexistence, and homogenisation',
              fontsize=16, color=NAVY, fontweight='bold', y=1.0)
 plt.tight_layout()
 
-# ── VERIFY ────────────────────────────────────────────────────────────────────
+# VERIFY
 # Monotone non-increase tolerant to small fluctuations within error bars.
 diffs = np.diff(S_mean)
 monotone = np.all(diffs <= S_err[:-1] + S_err[1:] + 1e-9)
@@ -150,7 +150,7 @@ collapse = S_mean[-1] < 0.05
 coexist = (survivors_low == 3) and (S_low > 0.25)
 
 print("=" * 70)
-print("VERIFY - Spatial RPS homogenisation transition:")
+print("VERIFY: Spatial RPS homogenisation transition:")
 print(f"  (1) Low mobility M={M_low}: survivors={survivors_low} (exp 3), "
       f"S_low={S_low:.3f} (>0.25)  -> {'PASS' if coexist else 'FAIL'}")
 print("  (2) Structure order parameter S(M):")

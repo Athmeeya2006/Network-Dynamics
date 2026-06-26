@@ -1,7 +1,7 @@
 """
 m2b_logistic_bifurcation.py
 ===========================
-Module 2b - Logistic map bifurcation diagram with Feigenbaum verification.
+Module 2b: Logistic map bifurcation diagram with Feigenbaum verification.
 
 Proof verified:
     1. Feigenbaum delta: ratio of successive period-doubling intervals
@@ -25,7 +25,7 @@ from src.maps import logistic_map, iterate_map
 np.random.seed(42)
 setup_light_theme()
 
-# ── High-resolution bifurcation diagram ──────────────────────────────────────
+# High-resolution bifurcation diagram
 n_r = 4000
 r_values = np.linspace(2.8, 4.0, n_r)
 n_iter = 300
@@ -43,7 +43,7 @@ for r in r_values:
 r_plot = np.array(r_plot)
 x_plot = np.array(x_plot)
 
-# ── Figure ───────────────────────────────────────────────────────────────────
+# Figure
 fig, axes = plt.subplots(1, 2, figsize=(18, 8),
                          gridspec_kw={'width_ratios': [3, 1]})
 fig.patch.set_facecolor("#F8FAFC")
@@ -65,7 +65,7 @@ ax.axvspan(3.828, 3.857, alpha=0.15, color=GOLD)
 ax.text(3.843, 0.05, 'P-3', fontsize=9, color=GOLD, ha='center',
         fontweight='bold')
 
-# ── Zoom inset ───────────────────────────────────────────────────────────────
+# Zoom inset
 ax_zoom = axes[1]
 apply_axes_style(ax_zoom, grid=False)
 mask = (r_plot >= 3.4) & (r_plot <= 3.6)
@@ -77,11 +77,11 @@ ax_zoom.set_title('Zoom: Self-Similarity', fontsize=12, color=NAVY,
                   fontweight='bold')
 ax_zoom.set_xlim(3.4, 3.6)
 
-fig.suptitle('Module 2b - Period-Doubling Cascade and Feigenbaum Constants',
+fig.suptitle('Module 2b: Period-Doubling Cascade and Feigenbaum Constants',
              fontsize=15, color=NAVY, fontweight='bold', y=1.01)
 plt.tight_layout()
 
-# ── VERIFY: Feigenbaum delta ─────────────────────────────────────────────────
+# VERIFY: Feigenbaum delta
 # Known period-doubling thresholds for the logistic map
 r_thresholds = [
     3.0,              # 1 -> 2
@@ -94,7 +94,7 @@ r_thresholds = [
 ]
 
 print("=" * 65)
-print("VERIFY - Feigenbaum delta (period-doubling ratio):")
+print("VERIFY: Feigenbaum delta (period-doubling ratio):")
 print(f"  {'n':>3s}  {'r_n':>12s}  {'delta_n':>12s}")
 deltas = []
 for i in range(2, len(r_thresholds)):
@@ -106,10 +106,10 @@ print(f"\n  Theory:   delta = 4.6692")
 print(f"  Best n:   delta = {deltas[-1]:.4f}")
 print(f"  Error:    {abs(deltas[-1] - 4.6692):.4f}")
 
-# ── VERIFY: Feigenbaum alpha ─────────────────────────────────────────────────
+# VERIFY: Feigenbaum alpha
 # d_n = f^{2^{n-1}}(0.5, r_ss_n) - 0.5  at the superstable parameter
 # alpha = d_n / d_{n+1} -> 2.5029
-print("\nVERIFY - Feigenbaum alpha (branch spacing ratio):")
+print("\nVERIFY: Feigenbaum alpha (branch spacing ratio):")
 from src.maps import find_superstable_r
 
 r_ss = []

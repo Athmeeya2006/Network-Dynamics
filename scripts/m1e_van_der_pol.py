@@ -1,7 +1,7 @@
 """
 m1e_van_der_pol.py
 ==================
-Module 1e - Van der Pol oscillator: weak to relaxation oscillations.
+Module 1e: Van der Pol oscillator: weak to relaxation oscillations.
 
 Proof verified:
     In the relaxation limit (large mu), the period of the van der Pol
@@ -31,7 +31,7 @@ colors = CYCLE[:len(mu_values)]
 fig, axes = plt.subplots(2, 2, figsize=(16, 12))
 fig.patch.set_facecolor("#F8FAFC")
 
-# ── Top-left: Phase portraits ───────────────────────────────────────────────
+# Top-left: Phase portraits
 ax = axes[0, 0]
 apply_axes_style(ax)
 for mu, color in zip(mu_values, colors):
@@ -48,7 +48,7 @@ ax.set_title('Phase Portraits (Limit Cycles)', fontsize=12, color=NAVY,
 ax.legend(fontsize=8, framealpha=0.95, facecolor='white', edgecolor=SLATE,
           ncol=2)
 
-# ── Top-right: Time series for select mu ─────────────────────────────────────
+# Top-right: Time series for select mu
 ax = axes[0, 1]
 apply_axes_style(ax)
 for mu, color in [(0.5, TEAL), (3.0, PURPLE), (10.0, RED)]:
@@ -64,7 +64,7 @@ ax.set_title('Time Series: Weak to Relaxation', fontsize=12, color=NAVY,
 ax.legend(fontsize=10, framealpha=0.95, facecolor='white', edgecolor=SLATE)
 ax.set_xlim(0, 80)
 
-# ── Bottom-left: Period vs mu ────────────────────────────────────────────────
+# Bottom-left: Period vs mu
 ax = axes[1, 0]
 apply_axes_style(ax)
 
@@ -102,7 +102,7 @@ ax.set_title('Period Scaling in Relaxation Limit', fontsize=12,
              color=NAVY, fontweight='bold')
 ax.legend(fontsize=10, framealpha=0.95, facecolor='white', edgecolor=SLATE)
 
-# ── Bottom-right: Relaxation detail ─────────────────────────────────────────
+# Bottom-right: Relaxation detail
 ax = axes[1, 1]
 apply_axes_style(ax)
 vdp = VanDerPol(mu=10.0)
@@ -124,11 +124,11 @@ ax.set_title(r'Relaxation Oscillation ($\mu = 10$)', fontsize=12,
 ax.set_xlim(-3, 3)
 ax.set_ylim(-15, 15)
 
-fig.suptitle('Module 1e - Van der Pol Oscillator',
+fig.suptitle('Module 1e: Van der Pol Oscillator',
              fontsize=15, color=NAVY, fontweight='bold', y=1.01)
 plt.tight_layout()
 
-# ── VERIFY ───────────────────────────────────────────────────────────────────
+# VERIFY
 # Check period scaling at large mu
 large_mu_mask = mu_sweep >= 10.0
 mu_large = mu_sweep[large_mu_mask]
@@ -139,7 +139,7 @@ if np.sum(valid) >= 3:
     slope = coeffs[0]
     theory_slope = 3.0 - 2.0 * np.log(2)
     print("=" * 65)
-    print("VERIFY - Van der Pol period scaling (relaxation limit):")
+    print("VERIFY: Van der Pol period scaling (relaxation limit):")
     print(f"  Theory:   slope = 3 - 2*ln(2) = {theory_slope:.4f}")
     print(f"  Measured: slope = {slope:.4f}")
     print(f"  Error:    {abs(slope - theory_slope):.4f}")

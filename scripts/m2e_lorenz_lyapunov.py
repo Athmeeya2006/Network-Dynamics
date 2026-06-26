@@ -1,7 +1,7 @@
 """
 m2e_lorenz_lyapunov.py
 ======================
-Module 2e - Lorenz system Lyapunov spectrum and sensitive dependence.
+Module 2e: Lorenz system Lyapunov spectrum and sensitive dependence.
 
 Proof verified:
     - Largest Lyapunov exponent lambda_max ~ 0.906
@@ -28,7 +28,7 @@ setup_light_theme()
 
 sigma, beta, rho = 10.0, 8.0 / 3.0, 28.0
 
-# ── Transient warmup ─────────────────────────────────────────────────────────
+# Transient warmup
 def lorenz_rhs(x, t):
     return lorenz(x, t, sigma, beta, rho)
 
@@ -41,23 +41,23 @@ x0_warm = np.array([1.0, 1.0, 1.0])
 _, traj_warm = rk4(lorenz_rhs, x0_warm, (0, 30), 0.01)
 x0 = traj_warm[-1]
 
-# ── Sensitive dependence ─────────────────────────────────────────────────────
+# Sensitive dependence
 eps = 1e-9
 x0_pert = x0 + np.array([eps, 0, 0])
 t_sens, traj1 = rk4(lorenz_rhs, x0, (0, 30), 0.01)
 _, traj2 = rk4(lorenz_rhs, x0_pert, (0, 30), 0.01)
 dist = np.linalg.norm(traj1 - traj2, axis=1)
 
-# ── Largest Lyapunov exponent ────────────────────────────────────────────────
+# Largest Lyapunov exponent
 lam_max = benettin_largest(lorenz_rhs, x0, t_total=200, dt=0.01,
                            d0=1e-8, renorm_steps=10)
 
-# ── Full spectrum ────────────────────────────────────────────────────────────
+# Full spectrum
 spectrum = benettin_spectrum(lorenz_rhs, lorenz_jac, x0,
                              t_total=500, dt=0.01, renorm_steps=10)
 d_ky = kaplan_yorke_dimension(spectrum)
 
-# ── Figure ───────────────────────────────────────────────────────────────────
+# Figure
 fig, axes = plt.subplots(1, 3, figsize=(18, 6))
 fig.patch.set_facecolor("#F8FAFC")
 
@@ -121,13 +121,13 @@ ax.text(0.05, 0.95, info, transform=ax.transAxes, fontsize=10,
         bbox=dict(boxstyle='round,pad=0.5', facecolor='white',
                   edgecolor=SLATE, alpha=0.9))
 
-fig.suptitle('Module 2e - Lorenz System: Lyapunov Analysis',
+fig.suptitle('Module 2e: Lorenz System: Lyapunov Analysis',
              fontsize=15, color=NAVY, fontweight='bold', y=1.02)
 plt.tight_layout()
 
-# ── VERIFY ───────────────────────────────────────────────────────────────────
+# VERIFY
 print("=" * 65)
-print("VERIFY - Lorenz Lyapunov spectrum:")
+print("VERIFY: Lorenz Lyapunov spectrum:")
 print(f"  lambda_max:  measured = {spectrum[0]:.4f},  theory ~ 0.906")
 print(f"  Sum:         measured = {np.sum(spectrum):.4f},  "
       f"theory = {theory_sum:.4f}")

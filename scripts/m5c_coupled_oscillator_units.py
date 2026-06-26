@@ -1,7 +1,7 @@
 """
 m5c_coupled_oscillator_units.py
 ===============================
-Module 5c - Module-1 oscillator units dropped onto a network (composability).
+Module 5c: Module-1 oscillator units dropped onto a network (composability).
 
 This is the end-to-end test of the prime directive: the FitzHughNagumo and
 StuartLandau classes from src/oscillators.py are instantiated N times on a
@@ -41,9 +41,7 @@ from src.networks import adjacency_matrix
 np.random.seed(42)
 setup_light_theme()
 
-# ══════════════════════════════════════════════════════════════════════════════
 # (A) Coupled FitzHugh-Nagumo travelling wave on a 1D chain
-# ══════════════════════════════════════════════════════════════════════════════
 N_chain = 80
 fhn_units = [FitzHughNagumo(a=0.7, b=0.8, tau=12.5, I=0.0) for _ in range(N_chain)]
 A_chain = adjacency_matrix(nx.path_graph(N_chain))
@@ -62,9 +60,7 @@ peak_t = t_fhn[np.argmax(V, axis=0)]
 front_monotone = np.all(np.diff(peak_t[5:-5]) >= -1.0)
 speed = (N_chain - 10) / (peak_t[-5] - peak_t[5])   # nodes per time unit
 
-# ══════════════════════════════════════════════════════════════════════════════
 # (B) Coupled Stuart-Landau amplitude death (mean-field diffusive coupling)
-# ══════════════════════════════════════════════════════════════════════════════
 N_sl = 30
 rng = np.random.default_rng(0)
 omegas = rng.uniform(-3.0, 3.0, N_sl)               # frequency spread drives death
@@ -85,9 +81,7 @@ amp0 = amp[0]
 death_mask = amp < 0.05
 amp_min = amp.min()
 
-# ══════════════════════════════════════════════════════════════════════════════
 # Figure
-# ══════════════════════════════════════════════════════════════════════════════
 fig = plt.figure(figsize=(16, 11))
 gs = fig.add_gridspec(2, 2, height_ratios=[1, 1], hspace=0.3, wspace=0.25)
 fig.patch.set_facecolor("#F8FAFC")
@@ -126,14 +120,14 @@ ax.set_ylabel('Mean oscillation amplitude', color=NAVY)
 ax.set_title('(B) Coupled Stuart-Landau - amplitude death', color=NAVY, fontweight='bold')
 ax.legend(fontsize=9, framealpha=0.95, facecolor='white', edgecolor=SLATE)
 
-fig.suptitle('Module 5c - Module-1 units on a network: travelling waves & amplitude death',
+fig.suptitle('Module 5c: Module-1 units on a network: travelling waves & amplitude death',
              fontsize=16, color=NAVY, fontweight='bold', y=0.98)
 
-# ── VERIFY ────────────────────────────────────────────────────────────────────
+# VERIFY
 death_exists = np.any(death_mask) and amp0 > 0.5
 ok = death_exists and front_monotone
 print("=" * 70)
-print("VERIFY - composability: coupled Module-1 units on a graph:")
+print("VERIFY: composability: coupled Module-1 units on a graph:")
 print(f"  (A) FHN travelling wave: monotone front = {front_monotone}, "
       f"speed ~ {speed:.3f} nodes/time")
 print(f"  (B) Stuart-Landau amplitude death:")

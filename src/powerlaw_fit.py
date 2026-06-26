@@ -28,9 +28,7 @@ from scipy.special import zeta
 from scipy.optimize import minimize_scalar
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # DISCRETE POWER-LAW MLE
-# ═══════════════════════════════════════════════════════════════════════════════
 
 def _neg_loglike(alpha: float, tail: np.ndarray, xmin: int) -> float:
     """Negative log-likelihood of a discrete power law on the tail >= xmin."""
@@ -133,9 +131,7 @@ def fit_powerlaw(data, xmin_max: int | None = None) -> dict:
     return best
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # DISCRETE POWER-LAW SAMPLER (for the bootstrap)
-# ═══════════════════════════════════════════════════════════════════════════════
 
 def sample_discrete_powerlaw(alpha: float, xmin: int, size: int,
                              rng: np.random.Generator) -> np.ndarray:
@@ -220,9 +216,7 @@ def bootstrap_pvalue(data, fit: dict | None = None, n_boot: int = 200,
     return count / n_boot
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # NAIVE OLS EXPONENT (shown only to expose its bias)
-# ═══════════════════════════════════════════════════════════════════════════════
 
 def ols_exponent(data, xmin: int = 1) -> tuple[float, float, float]:
     """

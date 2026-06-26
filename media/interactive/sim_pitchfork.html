@@ -1,0 +1,64 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pitchfork bifurcation - interactive</title>
+<link rel="stylesheet" href="sim.css">
+<script src="plotly.min.js" charset="utf-8"></script>
+<script src="sim_lib.js"></script>
+</head><body>
+<header>
+  <a class="back" href="index.html">&larr; all simulations</a>
+  <h1>Pitchfork bifurcation as a potential well</h1>
+  <p>Slide r through 0 and watch the single well split into two (symmetry breaking).</p>
+</header>
+<div class="wrap">
+  <div id="plot"></div>
+  <div class="panel" id="panel"><h2>Parameters</h2></div>
+</div>
+<script>
+const plot = document.getElementById('plot');
+const panel = document.getElementById('panel');
+const { COL, slider, axis, note, readout } = SimLib;
+
+let r = 0.6, stateOut;
+const V = (x, r) => -0.5 * r * x * x + 0.25 * x * x * x * x;
+
+function draw() {
+  const xg = []; for (let i = 0; i <= 240; i++) xg.push(-1.8 + 3.6 * i / 240);
+  const curve = { x: xg, y: xg.map(x => V(x, r)), mode: 'lines',
+                  line: { color: COL.teal, width: 3 }, hoverinfo: 'skip' };
+  const mins = r > 0 ? [Math.sqrt(r), -Math.sqrt(r)] : [0];
+  const balls = { x: mins, y: mins.map(x => V(x, r)), mode: 'markers',
+                  marker: { size: 18, color: COL.gold, line: { color: '#FFFFFF', width: 1.5 } },
+                  hoverinfo: 'skip' };
+  const lay = SimLib.layout('Pitchfork potential: r = ' + r.toFixed(2),
+    { uirevision: 'keep', xaxis: axis({ range: [-1.8, 1.8], title: 'state x' }),
+      yaxis: axis({ range: [-1.1, 0.9], title: 'potential V(x)' }) });
+  Plotly.react(plot, [curve, balls], lay, SimLib.config);
+  if (stateOut)
+    stateOut.innerHTML = r <= 0 ? 'one stable rest state at x = <b>0</b>'
+                                : 'two stable states at x = <b>&plusmn;' + Math.sqrt(r).toFixed(3) + '</b>';
+}
+
+slider(panel, { label: 'Parameter r', min: -1.0, max: 2.0, step: 0.01, value: r, fmt: v => (+v).toFixed(2),
+  onInput: v => { r = v; draw(); } });
+stateOut = readout(panel);
+note(panel, 'V(x) = -r x^2/2 + x^4/4. For r < 0 the only minimum is x = 0. At r = 0 it splits and two new minima appear at x = +/- sqrt(r): the supercritical pitchfork.');
+
+SimLib.explain([
+  { title: 'What you are looking at', html:
+    '<p>The same supercritical pitchfork from the 1D bifurcation lab, drawn as an energy landscape. The flow <code>dx/dt = r x - x^3</code> is a gradient system, <code>dx/dt = -dV/dx</code>, so the ball always rolls downhill and settles in a minimum of the potential V(x).</p>' +
+    '<p>The gold ball sits at a stable rest state. Slide r and watch where the valleys are.</p>' },
+  { title: 'The split', html:
+    '<p>For r &lt; 0 the potential is a single well at x = 0: one rest state. At r = 0 the bottom flattens, and for r &gt; 0 it bulges up into a central hill flanked by two wells at x = +/- sqrt(r). The old rest state has become unstable (a hilltop) and two new stable states have appeared.</p>' },
+  { title: 'Symmetry breaking', html:
+    '<p>V(x) is perfectly symmetric in x, yet for r &gt; 0 the system must choose the left or right well. The equations stay symmetric while the outcome does not. This is the toy model for magnetisation, buckling and many phase transitions.</p>' },
+  { title: 'Things to try', html:
+    '<ul>' +
+    '<li>Sweep r slowly through 0 to feel the well flatten then split.</li>' +
+    '<li>Compare with the supercritical pitchfork in the 1D lab: the two wells here are the two solid branches there.</li>' +
+    '</ul>' }
+]);
+
+draw();
+</script>
+</body></html>

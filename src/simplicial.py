@@ -5,7 +5,7 @@ Higher-order interaction infrastructure (Module 6): clique complexes,
 triangle (2-simplex) enumeration, the Skardal-Arenas higher-order Kuramoto
 right-hand side, and the Iacopini simplicial-contagion update.
 
-This module closes the loop with the companion Erdos-Renyi-Contagion repo:
+This module connects to the companion Erdos-Renyi-Contagion repo:
 m6c is the higher-order analogue of that repo's pairwise SIR/percolation work.
 
 Provides:
@@ -21,9 +21,7 @@ import numpy as np
 import networkx as nx
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # CLIQUE COMPLEX
-# ═══════════════════════════════════════════════════════════════════════════════
 
 def triangles(G: nx.Graph) -> list[tuple[int, int, int]]:
     """
@@ -115,9 +113,7 @@ def random_simplicial_complex(n: int, k1: float, k_delta: float,
     return G, tris
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # HIGHER-ORDER KURAMOTO  (Skardal & Arenas)
-# ═══════════════════════════════════════════════════════════════════════════════
 
 def higher_order_kuramoto_meanfield(theta, t, omega, K1, K2):
     """
@@ -140,9 +136,7 @@ def higher_order_kuramoto_meanfield(theta, t, omega, K1, K2):
     return omega + pairwise + triadic
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # SIMPLICIAL CONTAGION  (Iacopini, Petri, Barrat & Latora 2019)
-# ═══════════════════════════════════════════════════════════════════════════════
 
 def simplicial_sis_step(state, A, tris, beta, beta_delta, mu, dt, rng):
     """

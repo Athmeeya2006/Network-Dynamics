@@ -1,7 +1,7 @@
 """
 m1b_2d_phase_plane.py
 =====================
-Module 1b - Phase portraits and fixed-point classification in 2D.
+Module 1b: Phase portraits and fixed-point classification in 2D.
 
 Proof verified:
     The trace-determinant classification of 2D linear systems matches
@@ -31,7 +31,7 @@ from src.integrators import rk4
 np.random.seed(42)
 setup_light_theme()
 
-# ── Linear systems for each classification ───────────────────────────────────
+# Linear systems for each classification
 systems = {
     'Stable Node': {
         'A': np.array([[-2, 0], [0, -1]]),
@@ -65,7 +65,7 @@ systems = {
     },
 }
 
-# ── Figure layout: main tr-det plane + 6 inset portraits ────────────────────
+# Figure layout: main tr-det plane + 6 inset portraits
 fig = plt.figure(figsize=(16, 10))
 fig.patch.set_facecolor("#F8FAFC")
 
@@ -117,7 +117,7 @@ ax_main.set_ylim(-4, 10)
 ax_main.legend(fontsize=10, loc='lower right', framealpha=0.95,
                facecolor='white', edgecolor=SLATE)
 
-# ── Phase portrait insets ────────────────────────────────────────────────────
+# Phase portrait insets
 inset_positions = [
     [0.62, 0.62, 0.16, 0.28],  # Stable Node
     [0.82, 0.62, 0.16, 0.28],  # Unstable Node
@@ -131,7 +131,7 @@ order = ['Stable Node', 'Unstable Node', 'Stable Spiral',
          'Unstable Spiral', 'Center', 'Saddle Point']
 
 print("=" * 65)
-print("VERIFY - 2D fixed-point classification:")
+print("VERIFY: 2D fixed-point classification:")
 
 for idx, name in enumerate(order):
     sys_info = systems[name]
@@ -178,8 +178,8 @@ for idx, name in enumerate(order):
     det_val = np.linalg.det(A)
     match = classification.lower() == name.lower()
     print(f"  {name:20s} | tr={tr_val:+.2f}, det={det_val:+.2f} | "
-          f"classify_2d → {classification:20s} | "
-          f"{'✓ MATCH' if match else '✗ MISMATCH'}")
+          f"classify_2d gives {classification:20s} | "
+          f"{'MATCH' if match else 'MISMATCH'}")
 
 print("=" * 65)
 

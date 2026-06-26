@@ -1,0 +1,100 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hopf limit cycle - interactive</title>
+<link rel="stylesheet" href="sim.css">
+<script src="plotly.min.js" charset="utf-8"></script>
+<script src="sim_lib.js"></script>
+</head><body>
+<header>
+  <a class="back" href="index.html">&larr; all simulations</a>
+  <h1>Stuart-Landau / Hopf bifurcation</h1>
+  <p>Slide mu through 0: below it everything spirals to a point, above it onto a limit cycle of radius sqrt(mu).</p>
+</header>
+<div class="wrap">
+  <div id="plot"></div>
+  <div class="panel" id="panel"><h2>Parameters</h2></div>
+</div>
+<script>
+const plot = document.getElementById('plot');
+const panel = document.getElementById('panel');
+const { COL, rk4, slider, button, row, note } = SimLib;
+
+let mu = 1.0, omega = 1.6, speed = 1.0;
+const dt = 0.008, trail = 60, STEPS = 2800;
+const ics = [[0.05, 0.0], [-0.04, 0.03], [1.9, 0.2], [-1.6, -1.4]];
+const cols = [COL.teal, COL.cyan, COL.red, COL.gold];
+let trajs = [], idx = 0, playing = true, raf = null;
+
+function rhs(_, s) {
+  const x = s[0], y = s[1], r2 = x * x + y * y;
+  return [mu * x - omega * y - r2 * x, omega * x + mu * y - r2 * y];
+}
+
+function compute() {
+  trajs = ics.map(ic => { let y = ic.slice(); const arr = [y];
+    for (let i = 0; i < STEPS; i++) { y = rk4(rhs, 0, y, dt); arr.push(y); } return arr; });
+  idx = 0; draw();
+}
+
+function draw() {
+  const R = mu > 0 ? Math.sqrt(mu) : 0;
+  const ct = []; for (let a = 0; a <= 120; a++) ct.push(2 * Math.PI * a / 120);
+  const data = [{ x: ct.map(a => R * Math.cos(a)), y: ct.map(a => R * Math.sin(a)), mode: 'lines',
+                  line: { color: COL.dim, width: 2, dash: 'dash' }, hoverinfo: 'skip' }];
+  trajs.forEach((tr, j) => data.push({ x: tr.map(p => p[0]), y: tr.map(p => p[1]), mode: 'lines',
+                  line: { color: cols[j], width: 1 }, opacity: 0.25, hoverinfo: 'skip' }));
+  for (let j = 0; j < 4; j++) data.push({ x: [], y: [], mode: 'lines',
+                  line: { color: cols[j], width: 3 }, hoverinfo: 'skip' });
+  for (let j = 0; j < 4; j++) data.push({ x: [trajs[j][0][0]], y: [trajs[j][0][1]], mode: 'markers',
+                  marker: { size: 9, color: cols[j], line: { color: '#FFFFFF', width: 1 } } });
+  const lay = SimLib.layout('Stuart-Landau phase plane',
+    { uirevision: 'keep', xaxis: { range: [-2.1, 2.1], color: COL.muted, gridcolor: COL.dim },
+      yaxis: { range: [-2.1, 2.1], color: COL.muted, gridcolor: COL.dim, scaleanchor: 'x' } });
+  Plotly.react(plot, data, lay, SimLib.config);
+}
+
+function step() {
+  const adv = Math.max(1, Math.round(speed * 5));
+  idx += adv; if (idx >= STEPS) idx = 0;
+  const xs = [], ys = [], ind = [];
+  for (let j = 0; j < 4; j++) {
+    const s = Math.max(0, idx - trail);
+    xs.push(trajs[j].slice(s, idx + 1).map(p => p[0]));
+    ys.push(trajs[j].slice(s, idx + 1).map(p => p[1])); ind.push(5 + j);
+  }
+  for (let j = 0; j < 4; j++) {
+    xs.push([trajs[j][idx][0]]); ys.push([trajs[j][idx][1]]); ind.push(9 + j);
+  }
+  Plotly.restyle(plot, { x: xs, y: ys }, ind);
+}
+
+function loop() { if (!playing) return; step(); raf = requestAnimationFrame(loop); }
+function play() { if (playing) return; playing = true; loop(); }
+function pause() { playing = false; if (raf) cancelAnimationFrame(raf); }
+
+slider(panel, { label: 'mu (Hopf parameter)', min: -1.0, max: 2.0, step: 0.05, value: mu,
+  onInput: v => { mu = v; compute(); } });
+slider(panel, { label: 'omega (frequency)', min: 0.2, max: 4, step: 0.1, value: omega,
+  onInput: v => { omega = v; compute(); } });
+slider(panel, { label: 'Speed', min: 0.3, max: 4, step: 0.1, value: speed, unit: '×',
+  onInput: v => { speed = v; } });
+row(panel, [button(panel, '▶ Play', play), button(panel, '❚❚ Pause', pause)]);
+note(panel, 'z\' = (mu + i omega) z - |z|^2 z. mu < 0: stable point at origin. mu > 0: stable limit cycle (dashed) of radius sqrt(mu). The slider crosses the Hopf bifurcation at mu = 0.');
+
+SimLib.explain([
+  { title: 'What you are looking at', html:
+    '<p>The Stuart-Landau equation is the normal form of a supercritical Hopf bifurcation: the simplest system whose fixed point hands over to an oscillation. Four trajectories start from different points; the dashed circle is the limit cycle of radius sqrt(mu).</p>' },
+  { title: 'Below and above mu = 0', html:
+    '<p>For mu &lt; 0 every start spirals into the origin, a stable focus. For mu &gt; 0 the origin repels and all four trajectories wind onto the same circle, whatever their starting point. That shared, isolated loop is the limit cycle.</p>' },
+  { title: 'The two knobs', html:
+    '<ul>' +
+    '<li><b>mu</b> sets the radius, sqrt(mu), and so the oscillation amplitude. It is the bifurcation parameter.</li>' +
+    '<li><b>omega</b> sets how fast the phase rotates around the loop, that is, the frequency, without changing the amplitude.</li>' +
+    '</ul>' },
+  { title: 'Where to go next', html:
+    '<p>The 2D bifurcation lab puts this beside the subcritical Hopf, where the cycle is born unstable and the onset becomes a jump with hysteresis. The van der Pol lab shows a limit cycle that is far from circular.</p>' }
+]);
+
+compute(); loop();
+</script>
+</body></html>

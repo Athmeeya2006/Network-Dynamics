@@ -1,7 +1,7 @@
 """
 m4c_degree_distributions.py
 ===========================
-Module 4c - Degree distributions of canonical network models.
+Module 4c: Degree distributions of canonical network models.
 
 Proof verified:
     Erdos-Renyi graphs have a Poisson degree distribution (light tail);
@@ -29,7 +29,7 @@ from src.powerlaw_fit import fit_powerlaw, sample_discrete_powerlaw
 np.random.seed(42)
 setup_light_theme()
 
-# ── Build large graphs for clean statistics ──────────────────────────────────
+# Build large graphs for clean statistics
 N = 20000
 m = 3
 print("Generating ER, BA, and configuration-model graphs...")
@@ -58,7 +58,7 @@ def ccdf(data):
     return xs, c
 
 
-# ── Figure ────────────────────────────────────────────────────────────────────
+# Figure
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6.5))
 fig.patch.set_facecolor("#F8FAFC")
 
@@ -91,16 +91,16 @@ ax2.set_ylabel(r'$P(K \geq k)$', color=NAVY)
 ax2.set_title('Complementary CDF', color=NAVY, fontweight='bold')
 ax2.legend(fontsize=10, framealpha=0.95, facecolor='white', edgecolor=SLATE)
 
-fig.suptitle('Module 4c - Degree distributions: Poisson vs scale-free vs configuration model',
+fig.suptitle('Module 4c: Degree distributions: Poisson vs scale-free vs configuration model',
              fontsize=16, color=NAVY, fontweight='bold', y=1.0)
 plt.tight_layout()
 
-# ── VERIFY: BA exponent ~ 3 via Clauset MLE ──────────────────────────────────
+# VERIFY: BA exponent ~ 3 via Clauset MLE
 fit_ba = fit_powerlaw(k_ba, xmin_max=40)
 gamma = fit_ba['alpha']
 ok = abs(gamma - 3.0) < 0.3
 print("=" * 70)
-print("VERIFY - BA degree distribution exponent (Clauset MLE):")
+print("VERIFY: BA degree distribution exponent (Clauset MLE):")
 print(f"  gamma_MLE = {gamma:.3f}  (xmin = {fit_ba['xmin']}, n_tail = {fit_ba['n_tail']})")
 print(f"  theory: gamma = 3.0   |gamma - 3| = {abs(gamma - 3.0):.3f} (< 0.3)")
 print(f"  status: {'PASS' if ok else 'FAIL'}")

@@ -1,7 +1,7 @@
 """
 m2c_logistic_lyapunov.py
 ========================
-Module 2c - Lyapunov exponent of the logistic map.
+Module 2c: Lyapunov exponent of the logistic map.
 
 Proof verified:
     lambda(r) crosses zero at each period-doubling, is positive in
@@ -25,7 +25,7 @@ from src.lyapunov import map_lyapunov
 np.random.seed(42)
 setup_light_theme()
 
-# ── Compute Lyapunov exponent and bifurcation diagram ────────────────────────
+# Compute Lyapunov exponent and bifurcation diagram
 n_r = 3000
 r_values = np.linspace(2.8, 4.0, n_r)
 lyap = np.array([map_lyapunov(logistic_map, logistic_map_derivative,
@@ -38,7 +38,7 @@ for r in np.linspace(2.8, 4.0, 2000):
     r_bif.extend([r] * 200)
     x_bif.extend(orbit)
 
-# ── Figure: two panels sharing x-axis ───────────────────────────────────────
+# Figure: two panels sharing x-axis
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(16, 10), sharex=True,
                                 gridspec_kw={'height_ratios': [1, 1.5]})
 fig.patch.set_facecolor("#F8FAFC")
@@ -72,11 +72,11 @@ ax2.set_title('Bifurcation Diagram', fontsize=13, color=NAVY,
 ax2.set_xlim(2.8, 4.0)
 ax2.set_ylim(0, 1)
 
-fig.suptitle('Module 2c - Lyapunov Exponent Overlaid on Bifurcation Diagram',
+fig.suptitle('Module 2c: Lyapunov Exponent Overlaid on Bifurcation Diagram',
              fontsize=15, color=NAVY, fontweight='bold', y=1.01)
 plt.tight_layout()
 
-# ── VERIFY ───────────────────────────────────────────────────────────────────
+# VERIFY
 # Check: lambda at r=3.0 (period-doubling) should be near 0
 # lambda at r=4.0 should be ln(2) ~ 0.693
 lam_r3 = map_lyapunov(logistic_map, logistic_map_derivative, 0.1, 3.0,
@@ -88,7 +88,7 @@ lam_p3 = map_lyapunov(logistic_map, logistic_map_derivative, 0.1, 3.83,
                        50000, 2000)
 
 print("=" * 65)
-print("VERIFY - Lyapunov exponent at key r values:")
+print("VERIFY: Lyapunov exponent at key r values:")
 print(f"  r = 3.0:  lambda = {lam_r3:+.6f}  "
       f"(theory: 0, period-doubling)")
 print(f"  r = 4.0:  lambda = {lam_r4:+.6f}  "

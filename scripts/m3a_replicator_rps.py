@@ -1,7 +1,7 @@
 """
 m3a_replicator_rps.py
 =====================
-Module 3a - Replicator dynamics of Rock-Paper-Scissors.
+Module 3a: Replicator dynamics of Rock-Paper-Scissors.
 
 Proof verified:
     For neutral RPS (epsilon = 0), the quantity V = x_1 * x_2 * x_3
@@ -27,7 +27,7 @@ from src.integrators import solve_ode
 np.random.seed(42)
 setup_light_theme()
 
-# ── Simplex Boundary Setup ───────────────────────────────────────────────────
+# Simplex Boundary Setup
 def draw_simplex_boundary(ax):
     # Vertices in 3D simplex: (1,0,0), (0,1,0), (0,0,1)
     v3d = np.array([
@@ -51,7 +51,7 @@ def draw_simplex_boundary(ax):
     ne_2d = simplex_projection([1/3, 1/3, 1/3])
     ax.scatter([ne_2d[0]], [ne_2d[1]], color=GOLD, s=100, marker='*', zorder=10, edgecolors='white', linewidths=1.5)
 
-# ── Simulations ──────────────────────────────────────────────────────────────
+# Simulations
 fig, axes = plt.subplots(1, 3, figsize=(18, 6.5))
 fig.patch.set_facecolor("#F8FAFC")
 
@@ -100,11 +100,11 @@ for idx, (eps, title, color) in enumerate(cases):
     ax.set_xlim(-0.15, 1.15)
     ax.set_ylim(-0.1, 1.0)
 
-fig.suptitle('Module 3a - Rock-Paper-Scissors Replicator Dynamics on the Simplex',
+fig.suptitle('Module 3a: Rock-Paper-Scissors Replicator Dynamics on the Simplex',
              fontsize=16, color=NAVY, fontweight='bold', y=0.98)
 plt.tight_layout()
 
-# ── VERIFY: Conservation of V = x1 * x2 * x3 ─────────────────────────────────
+# VERIFY: Conservation of V = x1 * x2 * x3
 V_neutral = conservation_results[0.0]
 V_stable = conservation_results[0.2]
 V_unstable = conservation_results[-0.2]
@@ -117,12 +117,12 @@ delta_stable = V_stable[-1] - V_stable[0]
 delta_unstable = V_unstable[-1] - V_unstable[0]
 
 print("=" * 65)
-print("VERIFY - Replicator RPS Conservation of V = x_1*x_2*x_3:")
+print("VERIFY: Replicator RPS Conservation of V = x_1*x_2*x_3:")
 print(f"  Neutral (epsilon = 0):")
 print(f"    Initial V:       {V_neutral[0]:.6f}")
 print(f"    Final V:         {V_neutral[-1]:.6f}")
 print(f"    Std Dev of V(t): {std_neutral:.6e}  (Theory: 0.000000)")
-print(f"    Status:          {'✓ CONSERVED' if std_neutral < 1e-5 else '✗ FAILS'}")
+print(f"    Status:          {'CONSERVED' if std_neutral < 1e-5 else 'FAILS'}")
 print(f"  Stable (epsilon = 0.2):")
 print(f"    Change in V:     {delta_stable:+.6f}  (Theory: > 0, spiraling in)")
 print(f"  Unstable (epsilon = -0.2):")

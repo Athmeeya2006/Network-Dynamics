@@ -16,7 +16,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     import matplotlib.pyplot as plt
 
-# ── Consistent color palette ─────────────────────────────────────────────────
+# Consistent color palette
 NAVY = "#1A3A5C"
 TEAL = "#0E7490"
 RED = "#DC2626"
@@ -41,9 +41,7 @@ DIM = "#334155"
 CYCLE = [TEAL, RED, GOLD, PURPLE, GREEN, ROSE, ORANGE, NAVY, CYAN, INDIGO]
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # PATH HELPERS
-# ═══════════════════════════════════════════════════════════════════════════════
 
 def _repo_root() -> str:
     """Return the absolute path to the repository root."""
@@ -92,9 +90,7 @@ def save_figure(fig: "plt.Figure", name: str, subdir: str = "figures",
     return path
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # MATPLOTLIB THEME SETUP
-# ═══════════════════════════════════════════════════════════════════════════════
 
 def setup_dark_theme() -> None:
     """Configure matplotlib for dark-themed plots."""
@@ -115,7 +111,7 @@ def setup_dark_theme() -> None:
 
 
 def setup_light_theme() -> None:
-    """Configure matplotlib for light-themed publication plots."""
+    """Configure matplotlib for the shared light theme."""
     import matplotlib
     matplotlib.rcParams.update({
         "figure.facecolor": "#F8FAFC",
@@ -132,9 +128,7 @@ def setup_light_theme() -> None:
     })
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # AXES STYLING
-# ═══════════════════════════════════════════════════════════════════════════════
 
 def despine(ax: "plt.Axes", keep: tuple[str, ...] = ("left", "bottom")) -> None:
     """
@@ -157,7 +151,7 @@ def despine(ax: "plt.Axes", keep: tuple[str, ...] = ("left", "bottom")) -> None:
 def apply_axes_style(ax: "plt.Axes", grid: bool = True,
                      alpha: float = 0.25) -> None:
     """
-    Apply consistent publication styling to a matplotlib axes.
+    Apply the shared styling to a matplotlib axes.
 
     Parameters
     ----------
@@ -178,7 +172,7 @@ def apply_axes_style(ax: "plt.Axes", grid: bool = True,
 
 
 def set_pub_style() -> None:
-    """Set publication-quality defaults for all figures."""
+    """Set the shared figure defaults for all plots."""
     import matplotlib
     setup_light_theme()
     matplotlib.rcParams.update({

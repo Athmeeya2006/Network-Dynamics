@@ -1,7 +1,7 @@
 """
 m4b_small_world.py
 ==================
-Module 4b - The Watts-Strogatz small-world transition.
+Module 4b: The Watts-Strogatz small-world transition.
 
 Proof verified:
     Interpolating a ring lattice toward a random graph by rewiring each edge
@@ -30,7 +30,7 @@ from src.networks import watts_strogatz, clustering, avg_path_length
 np.random.seed(42)
 setup_light_theme()
 
-# ── Parameters ───────────────────────────────────────────────────────────────
+# Parameters
 N = 1000
 k = 10
 n_realizations = 20
@@ -55,7 +55,7 @@ for i, p in enumerate(p_values):
     L_ratio[i] = np.mean(Ls) / L0
     C_ratio[i] = np.mean(Cs) / C0
 
-# ── Figure ────────────────────────────────────────────────────────────────────
+# Figure
 fig, ax = plt.subplots(figsize=(11, 7))
 fig.patch.set_facecolor("#F8FAFC")
 apply_axes_style(ax)
@@ -73,20 +73,20 @@ if np.any(sw_mask):
 
 ax.set_xlabel('Rewiring probability $p$', color=NAVY)
 ax.set_ylabel('Normalised quantity', color=NAVY)
-ax.set_title('Module 4b - Watts-Strogatz small-world transition\n'
+ax.set_title('Module 4b: Watts-Strogatz small-world transition\n'
              rf'$N={N}$, $k={k}$, {n_realizations} realisations per $p$',
              color=NAVY, fontweight='bold')
 ax.legend(fontsize=11, framealpha=0.95, facecolor='white', edgecolor=SLATE, loc='center left')
 ax.set_ylim(0, 1.05)
 
-# ── VERIFY ────────────────────────────────────────────────────────────────────
+# VERIFY
 ok = np.any(sw_mask)
 if ok:
     idx = np.where(sw_mask)[0]
     p_lo, p_hi = p_values[idx.min()], p_values[idx.max()]
     sample = idx[len(idx) // 2]
 print("=" * 70)
-print("VERIFY - small-world window (L collapsed, C retained):")
+print("VERIFY: small-world window (L collapsed, C retained):")
 if ok:
     print(f"  window: p in [{p_lo:.1e}, {p_hi:.1e}]")
     print(f"  e.g. p={p_values[sample]:.1e}: "

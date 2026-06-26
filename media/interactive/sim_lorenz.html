@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lorenz attractor - interactive</title>
+<link rel="stylesheet" href="sim.css">
+<script src="plotly.min.js" charset="utf-8"></script>
+<script src="sim_lib.js"></script>
+</head><body>
+<header>
+  <a class="back" href="index.html">&larr; all simulations</a>
+  <h1>Lorenz attractor</h1>
+  <p>Change sigma, rho, beta and watch the attractor reshape. Drag to rotate the 3-D view.</p>
+</header>
+<div class="wrap">
+  <div id="plot"></div>
+  <div class="panel" id="panel"><h2>Parameters</h2></div>
+</div>
+<script>
+const plot = document.getElementById('plot');
+const panel = document.getElementById('panel');
+const { COL, rk4, slider, button, row, note, readout } = SimLib;
+
+let sigma = 10, rho = 28, beta = 8 / 3, speed = 1.0;
+const dt = 0.01, N = 6000, trail = 120;
+let traj = [], idx = trail, playing = true, raf = null, out;
+
+function rhs(_, s) {
+  return [sigma * (s[1] - s[0]), s[0] * (rho - s[2]) - s[1], s[0] * s[1] - beta * s[2]];
+}
+
+function ax() {
+  return { backgroundcolor: COL.bg, gridcolor: COL.dim, zerolinecolor: COL.dim,
+           showbackground: true, color: COL.muted };
+}
+
+function compute() {
+  traj = []; let y = [1, 1, 1];
+  for (let i = 0; i < 200; i++) y = rk4(rhs, 0, y, dt);   // settle onto attractor
+  for (let i = 0; i < N; i++) { y = rk4(rhs, 0, y, dt); traj.push(y); }
+  idx = trail; draw();
+}
+
+function draw() {
+  const fx = traj.filter((_, i) => i % 2 === 0);
+  const faded = { type: 'scatter3d', mode: 'lines', x: fx.map(p => p[0]), y: fx.map(p => p[1]),
+                  z: fx.map(p => p[2]), line: { color: COL.dim, width: 2 }, hoverinfo: 'skip' };
+  const seg = traj.slice(idx - trail, idx + 1);
+  const tr = { type: 'scatter3d', mode: 'lines', x: seg.map(p => p[0]), y: seg.map(p => p[1]),
+               z: seg.map(p => p[2]), line: { color: COL.teal, width: 6 }, hoverinfo: 'skip' };
+  const head = { type: 'scatter3d', mode: 'markers', x: [traj[idx][0]], y: [traj[idx][1]],
+                 z: [traj[idx][2]], marker: { size: 5, color: '#FFFFFF' } };
+  const lay = SimLib.layout('Lorenz attractor',
+    { uirevision: 'keep',
+      scene: { xaxis: ax(), yaxis: ax(), zaxis: ax(), bgcolor: COL.bg, aspectmode: 'data' } });
+  Plotly.react(plot, [faded, tr, head], lay, SimLib.config);
+}
+
+function step() {
+  const adv = Math.max(1, Math.round(speed * 6));
+  idx += adv; if (idx >= traj.length) idx = trail;
+  const seg = traj.slice(Math.max(0, idx - trail), idx + 1);
+  Plotly.restyle(plot,
+    { x: [seg.map(p => p[0]), [traj[idx][0]]], y: [seg.map(p => p[1]), [traj[idx][1]]],
+      z: [seg.map(p => p[2]), [traj[idx][2]]] }, [1, 2]);
+}
+
+function loop() { if (!playing) return; step(); raf = requestAnimationFrame(loop); }
+function play() { if (playing) return; playing = true; loop(); }
+function pause() { playing = false; if (raf) cancelAnimationFrame(raf); }
+
+slider(panel, { label: 'sigma', min: 1, max: 20, step: 0.1, value: sigma,
+  onInput: v => { sigma = v; compute(); } });
+slider(panel, { label: 'rho', min: 0.5, max: 60, step: 0.5, value: rho,
+  onInput: v => { rho = v; compute(); } });
+slider(panel, { label: 'beta', min: 0.5, max: 5, step: 0.05, value: beta,
+  onInput: v => { beta = v; compute(); } });
+slider(panel, { label: 'Speed', min: 0.3, max: 4, step: 0.1, value: speed, unit: '×',
+  onInput: v => { speed = v; } });
+row(panel, [button(panel, '▶ Play', play), button(panel, '❚❚ Pause', pause)]);
+note(panel, 'Classic chaos at sigma=10, rho=28, beta=8/3. Lower rho below ~24.7 and the two wings become stable spirals (no chaos).');
+
+SimLib.explain([
+  { title: 'What you are looking at', html:
+    '<p>The Lorenz system is three coupled equations that Edward Lorenz distilled from a model of convection rolls. The comet traces one trajectory through the 3D state (x, y, z). It never crosses itself and never repeats, yet it stays forever inside a bounded butterfly-shaped set: a strange attractor.</p>' +
+    '<p>Drag to rotate, scroll to zoom.</p>' },
+  { title: 'Why it is chaotic', html:
+    '<p>Two trajectories that start a hair apart are pulled onto the same attractor but separate exponentially fast, so long-term prediction is impossible. The trajectory keeps switching wings in a sequence that never settles into a cycle. This sensitive dependence is the butterfly effect.</p>' },
+  { title: 'The parameters', html:
+    '<ul>' +
+    '<li><b>rho</b> is the drive. Below about 24.7 the two wing centres are stable and trajectories spiral into one of them, no chaos. Above it both are unstable and the strange attractor takes over.</li>' +
+    '<li><b>sigma</b> and <b>beta</b> reshape the attractor; the classic values are 10 and 8/3.</li>' +
+    '</ul>' },
+  { title: 'Things to try', html:
+    '<ul>' +
+    '<li>Drop rho to 20 and watch the orbit collapse onto a single stable spiral.</li>' +
+    '<li>Raise rho back to 28 to recover the two-winged chaos.</li>' +
+    '<li>Push rho high (above 150) to find narrow windows of periodic orbits.</li>' +
+    '</ul>' }
+]);
+
+compute(); loop();
+</script>
+</body></html>

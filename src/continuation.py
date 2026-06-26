@@ -16,9 +16,7 @@ import numpy as np
 from scipy.optimize import fsolve
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # FIXED-POINT FINDING
-# ═══════════════════════════════════════════════════════════════════════════════
 
 def find_fixed_point(f, x0, args=(), full_output=False):
     """
@@ -122,9 +120,7 @@ def track_branch(f, df, x0, r_values):
     return x_branch, stable
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 # 2D CLASSIFICATION
-# ═══════════════════════════════════════════════════════════════════════════════
 
 def classify_2d(J):
     """

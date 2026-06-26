@@ -1,9 +1,9 @@
 """
 m6c_simplicial_contagion.py
 ===========================
-Module 6c - Simplicial contagion (higher-order analogue of the ER SIR work).
+Module 6c: Simplicial contagion (higher-order analogue of the ER SIR work).
 
-This script closes the loop with the companion Erdos-Renyi-Contagion repo:
+This script connects to the companion Erdos-Renyi-Contagion repo:
 that repo studied pairwise contagion (SIR / bond percolation) with its smooth,
 second-order epidemic threshold. Here the SAME pairwise channel is augmented
 with a triadic (2-simplex) infection channel.
@@ -41,7 +41,7 @@ from src.simplicial import random_simplicial_complex, simplicial_sis_step
 np.random.seed(42)
 setup_light_theme()
 
-# ── Build a random simplicial complex ────────────────────────────────────────
+# Build a random simplicial complex
 N = 2000
 mu = 1.0
 dt = 0.1
@@ -80,7 +80,7 @@ def branches(beta_delta, label):
 up_p, dn_p, area_p, jump_p = branches(0.0, "pairwise only (beta_Delta=0)")
 up_h, dn_h, area_h, jump_h = branches(0.4, "with triadic (beta_Delta=0.4)")
 
-# ── Figure ────────────────────────────────────────────────────────────────────
+# Figure
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6.8), sharey=True)
 fig.patch.set_facecolor("#F8FAFC")
 
@@ -108,15 +108,15 @@ ax2.set_title(rf'With triadic channel ($\beta_\Delta=0.4$) - DISCONTINUOUS'
 ax2.legend(fontsize=10, framealpha=0.95, facecolor='white', edgecolor=SLATE, loc='upper left')
 ax2.set_ylim(-0.02, 0.85)
 
-fig.suptitle('Module 6c - Simplicial contagion: the triadic channel turns the epidemic '
+fig.suptitle('Module 6c: Simplicial contagion: the triadic channel turns the epidemic '
              'transition first-order (cf. the ER repo pairwise SIR baseline)',
              fontsize=14, color=NAVY, fontweight='bold', y=1.0)
 plt.tight_layout()
 
-# ── VERIFY ────────────────────────────────────────────────────────────────────
+# VERIFY
 ok = (jump_h > 0.3) and (area_h > 5 * max(area_p, 1e-4))
 print("=" * 70)
-print("VERIFY - simplicial contagion (first-order + bistability):")
+print("VERIFY: simplicial contagion (first-order + bistability):")
 print(f"  pairwise (beta_D=0):   hysteresis area = {area_p:.4f}, max jump = {jump_p:.3f}")
 print(f"  triadic  (beta_D=0.4): hysteresis area = {area_h:.4f}, max jump = {jump_h:.3f}")
 print(f"  triadic transition is discontinuous + bistable: {'PASS' if ok else 'FAIL'}")

@@ -1,7 +1,7 @@
 """
 m2a_logistic_cobweb.py
 ======================
-Module 2a - Logistic map cobweb diagrams.
+Module 2a: Logistic map cobweb diagrams.
 
 Shows the transition from fixed point to period-2 to chaos via
 cobweb diagrams at r = 2.8, 3.3, 3.5, 3.9.
@@ -56,7 +56,7 @@ for ax, r, title, color in zip(axes.flat, r_values, titles, colors):
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
 
-fig.suptitle('Module 2a - Logistic Map Cobweb Diagrams',
+fig.suptitle('Module 2a: Logistic Map Cobweb Diagrams',
              fontsize=15, color=NAVY, fontweight='bold', y=1.01)
 plt.tight_layout()
 

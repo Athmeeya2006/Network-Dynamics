@@ -1,7 +1,7 @@
 """
 m6a_simplicial_complex.py
 =========================
-Module 6a - Building a simplicial complex from a graph (the clique complex).
+Module 6a: Building a simplicial complex from a graph (the clique complex).
 
 Proof verified:
     The clique complex of a graph promotes every triangle of the 1-skeleton
@@ -32,7 +32,7 @@ from src.simplicial import triangles, simplex_counts, random_simplicial_complex
 np.random.seed(42)
 setup_light_theme()
 
-# ── A small graph to visualise the filled complex ───────────────────────────
+# A small graph to visualise the filled complex
 G_small = nx.erdos_renyi_graph(18, 0.28, seed=5)
 tris_small = triangles(G_small)
 counts_small = simplex_counts(G_small)
@@ -42,11 +42,11 @@ pos = nx.spring_layout(G_small, seed=2)
 nx_tri = sum(nx.triangles(G_small).values()) // 3
 chi = counts_small[0] - counts_small[1] + counts_small[2]
 
-# ── A larger random simplicial complex: simplex spectrum ─────────────────────
+# A larger random simplicial complex: simplex spectrum
 G_big, tris_big = random_simplicial_complex(300, k1=10, k_delta=8, seed=7)
 nodes_per_dim = [G_big.number_of_nodes(), G_big.number_of_edges(), len(tris_big)]
 
-# ── Figure ────────────────────────────────────────────────────────────────────
+# Figure
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 7))
 fig.patch.set_facecolor("#F8FAFC")
 
@@ -78,14 +78,14 @@ ax2.set_title(f'Random simplicial complex (N=300)\n'
               rf'$\langle k\rangle\approx10$, $\langle k_\Delta\rangle\approx8$',
               color=NAVY, fontweight='bold')
 
-fig.suptitle('Module 6a - Simplicial complexes: promoting triangles to 2-simplices',
+fig.suptitle('Module 6a: Simplicial complexes: promoting triangles to 2-simplices',
              fontsize=16, color=NAVY, fontweight='bold', y=1.0)
 plt.tight_layout()
 
-# ── VERIFY ────────────────────────────────────────────────────────────────────
+# VERIFY
 ok = (len(tris_small) == nx_tri)
 print("=" * 70)
-print("VERIFY - clique complex triangle enumeration:")
+print("VERIFY: clique complex triangle enumeration:")
 print(f"  src.simplicial.triangles count = {len(tris_small)}")
 print(f"  independent networkx count     = {nx_tri}")
 print(f"  Euler characteristic chi = V - E + F = {counts_small[0]} - "

@@ -1,7 +1,7 @@
 """
 m2f_rossler.py
 ==============
-Module 2f - Rossler system: period-doubling cascade via Poincare sections.
+Module 2f: Rossler system: period-doubling cascade via Poincare sections.
 
 Proof verified:
     Period-doubling cascade visible in the Poincare return map as c
@@ -26,13 +26,13 @@ from src.integrators import solve_ode
 np.random.seed(42)
 setup_light_theme()
 
-# ── Main attractor at c=5.7 ─────────────────────────────────────────────────
+# Main attractor at c=5.7
 a, b, c = 0.2, 0.2, 5.7
 x0 = np.array([1.0, 1.0, 0.0])
 t, traj = solve_ode(lambda x, t: rossler(x, t, a, b, c),
                     x0, (0, 300), dt=0.01)
 
-# ── Period-doubling cascade: vary c ──────────────────────────────────────────
+# Period-doubling cascade: vary c
 c_values = [3.0, 4.0, 5.0, 5.7, 8.0, 12.0, 14.0, 18.0]
 
 fig = plt.figure(figsize=(18, 14))
@@ -121,13 +121,13 @@ ax_ret.set_title('Poincare Return Map', fontsize=12, color=NAVY,
                  fontweight='bold')
 ax_ret.legend(fontsize=10, framealpha=0.95, facecolor='white', edgecolor=SLATE)
 
-fig.suptitle('Module 2f - Rossler System: Period-Doubling Cascade',
+fig.suptitle('Module 2f: Rossler System: Period-Doubling Cascade',
              fontsize=15, color=NAVY, fontweight='bold', y=1.01)
 plt.tight_layout()
 
-# ── VERIFY ───────────────────────────────────────────────────────────────────
+# VERIFY
 print("=" * 65)
-print("VERIFY - Rossler period-doubling cascade:")
+print("VERIFY: Rossler period-doubling cascade:")
 print("  c ~ 2.8-4: period-1 orbit")
 print("  c ~ 4-5:   period-2 orbit")
 print("  c ~ 5-5.7: period-4 / chaos onset")
@@ -139,7 +139,7 @@ print("=" * 65)
 save_figure(fig, "m2f_rossler")
 plt.close()
 
-# ── Plotly interactive ───────────────────────────────────────────────────────
+# Plotly interactive
 try:
     import plotly.graph_objects as go
 

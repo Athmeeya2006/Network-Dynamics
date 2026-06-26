@@ -1,0 +1,79 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logistic map cobweb - interactive</title>
+<link rel="stylesheet" href="sim.css">
+<script src="plotly.min.js" charset="utf-8"></script>
+<script src="sim_lib.js"></script>
+</head><body>
+<header>
+  <a class="back" href="index.html">&larr; all simulations</a>
+  <h1>Logistic map cobweb</h1>
+  <p>Slide r through the period-doubling route to chaos and see the cobweb change instantly.</p>
+</header>
+<div class="wrap">
+  <div id="plot"></div>
+  <div class="panel" id="panel"><h2>Parameters</h2></div>
+</div>
+<script>
+const plot = document.getElementById('plot');
+const panel = document.getElementById('panel');
+const { COL, slider, axis, note, readout } = SimLib;
+
+let r = 3.2, x0 = 0.2, steps = 80, regOut;
+
+function regime(r) {
+  if (r < 3.0) return 'fixed point';
+  if (r < 3.449) return 'period-2';
+  if (r < 3.544) return 'period-4';
+  if (r < 3.5699) return 'period-8 and up';
+  return 'CHAOS';
+}
+
+function draw() {
+  const xg = []; for (let i = 0; i <= 200; i++) xg.push(i / 200);
+  const diag = { x: [0, 1], y: [0, 1], mode: 'lines',
+                 line: { color: COL.dim, width: 1.5, dash: 'dash' }, hoverinfo: 'skip' };
+  const para = { x: xg, y: xg.map(x => r * x * (1 - x)), mode: 'lines',
+                 line: { color: COL.gold, width: 3 }, hoverinfo: 'skip' };
+  let x = x0; const cx = [x0], cy = [0];
+  for (let i = 0; i < steps; i++) { const fx = r * x * (1 - x); cx.push(x, fx); cy.push(fx, fx); x = fx; }
+  const web = { x: cx, y: cy, mode: 'lines', line: { color: COL.teal, width: 1.1 }, hoverinfo: 'skip' };
+  const lay = SimLib.layout('Logistic map cobweb: r = ' + r.toFixed(3),
+    { uirevision: 'keep', xaxis: axis({ range: [0, 1], title: 'x_n' }),
+      yaxis: axis({ range: [0, 1], title: 'x_n+1', scaleanchor: 'x' }) });
+  Plotly.react(plot, [diag, para, web], lay, SimLib.config);
+  if (regOut) regOut.innerHTML = 'attractor: <b>' + regime(r) + '</b>';
+}
+
+slider(panel, { label: 'Growth rate r', min: 2.5, max: 4.0, step: 0.001, value: r, fmt: v => (+v).toFixed(3),
+  onInput: v => { r = v; draw(); } });
+slider(panel, { label: 'Start x0', min: 0.01, max: 0.99, step: 0.01, value: x0,
+  onInput: v => { x0 = v; draw(); } });
+slider(panel, { label: 'Iterations', min: 10, max: 200, step: 5, value: steps, fmt: v => v | 0,
+  onInput: v => { steps = v | 0; draw(); } });
+regOut = readout(panel);
+note(panel, 'Cobweb: bounce between the parabola f(x)=r x(1-x) and the diagonal. One box = a fixed point, 2 boxes = period-2, a filled square = chaos.');
+
+SimLib.explain([
+  { title: 'What you are looking at', html:
+    '<p>The logistic map <code>x(n+1) = r x(n) (1 - x(n))</code> models a population that grows but is held back by crowding. The cobweb is a way to iterate it by eye: go up to the parabola to get the next value, across to the diagonal to feed it back in, and repeat.</p>' },
+  { title: 'Reading the cobweb', html:
+    '<ul>' +
+    '<li>Spiralling into a single point: a stable fixed point.</li>' +
+    '<li>A closed rectangle of two points: a period-2 cycle.</li>' +
+    '<li>Four corners, then eight: the period-doubling cascade.</li>' +
+    '<li>A web that fills a region and never repeats: chaos.</li>' +
+    '</ul>' },
+  { title: 'The route to chaos', html:
+    '<p>As r rises past 3 the fixed point goes unstable and a 2-cycle appears, then a 4-cycle near 3.449, an 8-cycle near 3.544, and so on. The windows shrink by a constant factor, the Feigenbaum number 4.669, until chaos sets in around 3.5699. One simple equation, an infinite cascade.</p>' },
+  { title: 'Things to try', html:
+    '<ul>' +
+    '<li>Step r through 2.8, 3.2, 3.5, 3.56, 3.9 to walk down the cascade.</li>' +
+    '<li>In the chaotic range, nudge the start x0 slightly: the web reorganises, a hint of sensitive dependence.</li>' +
+    '<li>Find a periodic window near r = 3.83 inside the chaos.</li>' +
+    '</ul>' }
+]);
+
+draw();
+</script>
+</body></html>

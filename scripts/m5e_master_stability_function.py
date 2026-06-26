@@ -1,7 +1,7 @@
 """
 m5e_master_stability_function.py
 ================================
-Module 5e - The Master Stability Function and the eigenratio criterion.
+Module 5e: The Master Stability Function and the eigenratio criterion.
 
 Proof verified (Pecora & Carroll 1998; Barahona & Pecora 2002):
     For identical chaotic oscillators coupled diffusively through one variable,
@@ -39,9 +39,7 @@ import networkx as nx
 np.random.seed(42)
 setup_light_theme()
 
-# ══════════════════════════════════════════════════════════════════════════════
 # (1) Master Stability Function for x-coupled Rossler
-# ══════════════════════════════════════════════════════════════════════════════
 E = np.diag([1.0, 0.0, 0.0])           # coupling through x only
 alphas = np.linspace(0.0, 5.0, 26)
 print("Computing Master Stability Function for x-coupled Rossler...")
@@ -59,9 +57,7 @@ R_c = a2 / a1
 print(f"  stable MSF window: alpha in ({a1:.3f}, {a2:.3f}), "
       f"eigenratio threshold R_c = {R_c:.2f}")
 
-# ══════════════════════════════════════════════════════════════════════════════
 # (2) Topologies, eigenratios, predicted onset
-# ══════════════════════════════════════════════════════════════════════════════
 N = 50
 topologies = {
     'complete': nx.complete_graph(N),
@@ -87,9 +83,7 @@ for name, G in topologies.items():
     print(f"  {name:12s}: lambda2={l2:.3f}, lambdaN={lN:.3f}, "
           f"R={lN / l2:6.2f}, predicted onset sigma~{a1 / l2:.4f}")
 
-# ══════════════════════════════════════════════════════════════════════════════
 # (3) Direct simulation: coupled Rossler sync error vs coupling sigma
-# ══════════════════════════════════════════════════════════════════════════════
 def coupled_rossler_rhs(X, t, L, sigma, a=0.2, b=0.2, c=5.7):
     x, y, z = X[:, 0], X[:, 1], X[:, 2]
     dx = -y - z - sigma * (L @ x)        # diffusive coupling through x
@@ -129,9 +123,7 @@ for name in topologies:
     emp_onset[name] = sigmas[below[0]] if len(below) else np.nan
     print(f"  {name:12s}: empirical sync onset sigma = {emp_onset[name]}")
 
-# ══════════════════════════════════════════════════════════════════════════════
 # Figure
-# ══════════════════════════════════════════════════════════════════════════════
 fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(18, 6))
 fig.patch.set_facecolor("#F8FAFC")
 palette = [NAVY, TEAL, GOLD, PURPLE, RED]
@@ -174,12 +166,12 @@ ax3.set_ylabel(r'Measured sync onset $\sigma$', color=NAVY)
 ax3.set_title('(3) Prediction vs simulation', color=NAVY, fontweight='bold')
 ax3.legend(fontsize=8.5, framealpha=0.95, facecolor='white', edgecolor=SLATE)
 
-fig.suptitle('Module 5e - Master Stability Function: the eigenratio '
+fig.suptitle('Module 5e: Master Stability Function: the eigenratio '
              r'$\lambda_N/\lambda_2$ ranks synchronisability',
              fontsize=15, color=NAVY, fontweight='bold', y=1.02)
 plt.tight_layout()
 
-# ── VERIFY ────────────────────────────────────────────────────────────────────
+# VERIFY
 def rank(a):
     order = np.argsort(a)
     r = np.empty_like(order)
@@ -194,7 +186,7 @@ complete_first = (emp_onset['complete'] == np.nanmin(meas)) and \
                  (info['complete']['R'] == min(info[n]['R'] for n in names))
 ok = (spearman > 0.8) and complete_first
 print("=" * 70)
-print("VERIFY - eigenratio ordering matches simulated synchronisability:")
+print("VERIFY: eigenratio ordering matches simulated synchronisability:")
 for n in names:
     print(f"  {n:12s}: R={info[n]['R']:6.2f}  predicted onset={info[n]['sigma_lo']:.4f}  "
           f"measured onset={emp_onset[n]}")

@@ -1,7 +1,7 @@
 """
 m4a_centralities.py
 ===================
-Module 4a - Node centralities on Erdos-Renyi vs Barabasi-Albert graphs.
+Module 4a: Node centralities on Erdos-Renyi vs Barabasi-Albert graphs.
 
 Proof verified:
     On a scale-free (Barabasi-Albert) network the leading eigenvector of the
@@ -31,7 +31,7 @@ from src.networks import (er_graph, ba_graph, centralities, centrality_vector,
 np.random.seed(42)
 setup_light_theme()
 
-# ── Build graphs (matched mean degree); use giant components ─────────────────
+# Build graphs (matched mean degree); use giant components
 # Eigenvector centrality is only well defined on a connected graph, so we work
 # on the largest connected component (BA is connected; ER may not be).
 N = 300
@@ -52,7 +52,7 @@ def centrality_table(G):
 tab_er, nodes_er = centrality_table(G_er)
 tab_ba, nodes_ba = centrality_table(G_ba)
 
-# ── Figure: layouts colored by centrality (top BA) + correlation panels ──────
+# Figure: layouts colored by centrality (top BA) + correlation panels
 fig = plt.figure(figsize=(17, 10))
 gs = fig.add_gridspec(2, 4, height_ratios=[1.0, 0.9], hspace=0.32, wspace=0.25)
 fig.patch.set_facecolor("#F8FAFC")
@@ -109,13 +109,13 @@ ax.set_ylabel('Eigenvector centrality', color=NAVY)
 ax.set_title('Degree vs eigenvector centrality', color=NAVY, fontweight='bold')
 ax.legend(fontsize=10, framealpha=0.95, facecolor='white', edgecolor=SLATE)
 
-fig.suptitle('Module 4a - Centralities: hub localisation on scale-free vs homogeneous graphs',
+fig.suptitle('Module 4a: Centralities: hub localisation on scale-free vs homogeneous graphs',
              fontsize=16, color=NAVY, fontweight='bold', y=0.98)
 
-# ── VERIFY ────────────────────────────────────────────────────────────────────
+# VERIFY
 ok = (r_ba > r_er) and (r_ba > 0.8)
 print("=" * 70)
-print("VERIFY - degree vs eigenvector centrality correlation:")
+print("VERIFY: degree vs eigenvector centrality correlation:")
 print(f"  Erdos-Renyi:     r(degree, eigenvector) = {r_er:.4f}")
 print(f"  Barabasi-Albert: r(degree, eigenvector) = {r_ba:.4f}")
 print(f"  Hub localisation (r_BA > r_ER and r_BA > 0.8): {'PASS' if ok else 'FAIL'}")

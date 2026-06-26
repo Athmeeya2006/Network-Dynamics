@@ -1,7 +1,7 @@
 """
 m6b_higher_order_kuramoto.py
 ============================
-Module 6b - Higher-order (2-simplex) Kuramoto synchronisation.
+Module 6b: Higher-order (2-simplex) Kuramoto synchronisation.
 
 Proof verified (Skardal & Arenas 2019/2020):
     Adding a triadic (2-simplex) coupling term to the Kuramoto model,
@@ -35,7 +35,7 @@ from src.kuramoto import adiabatic_sweep
 np.random.seed(42)
 setup_light_theme()
 
-# ── Lorentzian natural frequencies (deterministic quantiles) ─────────────────
+# Lorentzian natural frequencies (deterministic quantiles)
 N = 1000
 gamma = 1.0
 u = (np.arange(1, N + 1)) / (N + 1)
@@ -62,7 +62,7 @@ ru_p, rd_p, area_p, jump_p = hysteresis(0.0, "pairwise")
 print("With triadic 2-simplex coupling (K2=10):")
 ru_h, rd_h, area_h, jump_h = hysteresis(10.0, "triadic")
 
-# ── Figure ────────────────────────────────────────────────────────────────────
+# Figure
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6.8), sharey=True)
 fig.patch.set_facecolor("#F8FAFC")
 
@@ -90,15 +90,15 @@ ax2.set_title(rf'With 2-simplex coupling ($K_2=10$) - EXPLOSIVE'
 ax2.legend(fontsize=10, framealpha=0.95, facecolor='white', edgecolor=SLATE, loc='upper left')
 ax2.set_ylim(-0.02, 1.0)
 
-fig.suptitle('Module 6b - Higher-order Kuramoto: triadic coupling makes synchronisation '
+fig.suptitle('Module 6b: Higher-order Kuramoto: triadic coupling makes synchronisation '
              'explosive (no degree-frequency correlation needed)',
              fontsize=14.5, color=NAVY, fontweight='bold', y=1.0)
 plt.tight_layout()
 
-# ── VERIFY ────────────────────────────────────────────────────────────────────
+# VERIFY
 ok = (area_h > 0.3) and (jump_h > 0.3) and (area_p < area_h / 3)
 print("=" * 70)
-print("VERIFY - higher-order (triadic) coupling induces explosive sync:")
+print("VERIFY: higher-order (triadic) coupling induces explosive sync:")
 print(f"  pairwise (K2=0):  hysteresis area = {area_p:.4f}, max jump = {jump_p:.3f}")
 print(f"  triadic  (K2=10): hysteresis area = {area_h:.4f}, max jump = {jump_h:.3f}")
 print(f"  triadic term induces abrupt transition + bistability: "

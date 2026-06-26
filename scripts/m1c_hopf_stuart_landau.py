@@ -1,7 +1,7 @@
 """
 m1c_hopf_stuart_landau.py
 =========================
-Module 1c - Supercritical Hopf bifurcation via the Stuart-Landau normal form.
+Module 1c: Supercritical Hopf bifurcation via the Stuart-Landau normal form.
 
 Proof verified:
     The Stuart-Landau oscillator z_dot = (mu + i*omega) z - |z|^2 z
@@ -30,7 +30,7 @@ from src.integrators import rk4
 np.random.seed(42)
 setup_light_theme()
 
-# ── Bifurcation diagram: sweep mu ────────────────────────────────────────────
+# Bifurcation diagram: sweep mu
 mu_values = np.linspace(-1.0, 2.0, 300)
 theoretical_amplitude = np.where(mu_values > 0, np.sqrt(mu_values), 0.0)
 
@@ -45,11 +45,11 @@ for i, mu in enumerate(mu_values):
     r = np.sqrt(traj[-n_late:, 0]**2 + traj[-n_late:, 1]**2)
     measured_amplitudes[i] = np.max(r) if mu > 0.01 else np.mean(r)
 
-# ── Figure ───────────────────────────────────────────────────────────────────
+# Figure
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 7))
 fig.patch.set_facecolor("#F8FAFC")
 
-# ── Left: Bifurcation diagram ────────────────────────────────────────────────
+# Left: Bifurcation diagram
 apply_axes_style(ax1)
 # Stable fixed point for mu < 0
 ax1.plot(mu_values[mu_values <= 0], np.zeros(np.sum(mu_values <= 0)),
@@ -84,7 +84,7 @@ ax1.legend(fontsize=10, framealpha=0.95, facecolor='white', edgecolor=SLATE,
 ax1.set_xlim(-1, 2)
 ax1.set_ylim(-1.8, 1.8)
 
-# ── Right: Sample trajectories ───────────────────────────────────────────────
+# Right: Sample trajectories
 apply_axes_style(ax2)
 
 sample_mus = [
@@ -126,11 +126,11 @@ ax2.set_ylim(-lim, lim)
 ax2.axhline(0, color=SLATE, lw=0.5, ls=':')
 ax2.axvline(0, color=SLATE, lw=0.5, ls=':')
 
-fig.suptitle('Module 1c - Hopf Bifurcation and the Stuart-Landau Oscillator',
+fig.suptitle('Module 1c: Hopf Bifurcation and the Stuart-Landau Oscillator',
              fontsize=15, color=NAVY, fontweight='bold', y=1.01)
 plt.tight_layout()
 
-# ── VERIFY: critical exponent ────────────────────────────────────────────────
+# VERIFY: critical exponent
 mu_fit = mu_values[(mu_values > 0.05) & (mu_values < 1.5)]
 amp_fit = measured_amplitudes[(mu_values > 0.05) & (mu_values < 1.5)]
 valid = amp_fit > 0.01
@@ -140,7 +140,7 @@ coeffs = np.polyfit(log_mu, log_amp, 1)
 exponent = coeffs[0]
 
 print("=" * 65)
-print("VERIFY - Hopf bifurcation amplitude scaling:")
+print("VERIFY: Hopf bifurcation amplitude scaling:")
 print(f"  Theory:   exponent = 0.5000  (amplitude ∝ sqrt(mu))")
 print(f"  Measured: exponent = {exponent:.4f}")
 print(f"  Error:    {abs(exponent - 0.5):.6f}")

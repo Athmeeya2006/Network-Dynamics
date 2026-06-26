@@ -1,14 +1,13 @@
 """
 m6d_higher_order_explosive_summary.py
 =====================================
-Module 6d - Synthesis: pairwise vs higher-order transitions, across both
+Module 6d: pairwise vs higher-order transitions, across both
 synchronisation (Module 5) and contagion (Module 6).
 
-This is the capstone figure of the whole ladder. It places four transitions on
-one 2x2 dashboard to make the central message unmistakable: higher-order
-(group) interactions turn smooth, second-order transitions into abrupt,
-first-order ones with hysteresis - and the same story holds for both
-synchronisation and contagion.
+This figure places four transitions on one 2x2 dashboard to compare them
+directly: higher-order (group) interactions turn smooth, second-order
+transitions into abrupt, first-order ones with hysteresis, and the same
+pattern holds for both synchronisation and contagion.
 
     sync     : pairwise Kuramoto (K2=0)        -> continuous
                higher-order Kuramoto (K2>0)    -> explosive (hysteresis)
@@ -37,9 +36,7 @@ from src.kuramoto import adiabatic_sweep
 np.random.seed(42)
 setup_light_theme()
 
-# ══════════════════════════════════════════════════════════════════════════════
 # SYNCHRONISATION: pairwise (K2=0) vs higher-order (K2>0)
-# ══════════════════════════════════════════════════════════════════════════════
 N_sync = 600
 u = (np.arange(1, N_sync + 1)) / (N_sync + 1)
 omega = np.tan(np.pi * (u - 0.5))
@@ -57,9 +54,7 @@ print("Synchronisation: pairwise vs higher-order...")
 sup_c, sdn_c, sarea_c = sync_loop(0.0)
 sup_e, sdn_e, sarea_e = sync_loop(10.0)
 
-# ══════════════════════════════════════════════════════════════════════════════
 # CONTAGION: pairwise (beta_Delta=0) vs simplicial (beta_Delta>0)
-# ══════════════════════════════════════════════════════════════════════════════
 N_cont = 1500
 mu, dt = 1.0, 0.1
 G, tris = random_simplicial_complex(N_cont, k1=20, k_delta=6, seed=3)
@@ -89,9 +84,7 @@ print("Contagion: pairwise vs simplicial...")
 cup_c, cdn_c, carea_c = cont_loop(0.0)
 cup_e, cdn_e, carea_e = cont_loop(0.4)
 
-# ══════════════════════════════════════════════════════════════════════════════
 # 2x2 dashboard
-# ══════════════════════════════════════════════════════════════════════════════
 fig, axes = plt.subplots(2, 2, figsize=(15, 11))
 fig.patch.set_facecolor("#F8FAFC")
 
@@ -121,17 +114,17 @@ panel(axes[1, 1], betas, cup_e, cdn_e, r'Infection $\beta$', r'Infected $\rho^*$
 
 fig.text(0.5, 0.945, 'SYNCHRONISATION (Module 5)  |  CONTAGION (Module 6)',
          ha='center', fontsize=12, color=SLATE, style='italic')
-fig.suptitle('Module 6d - Higher-order interactions make transitions explosive, '
+fig.suptitle('Module 6d: Higher-order interactions make transitions explosive, '
              'across sync and contagion alike',
              fontsize=15, color=NAVY, fontweight='bold', y=1.0)
 plt.tight_layout(rect=[0, 0, 1, 0.94])
 
-# ── VERIFY ────────────────────────────────────────────────────────────────────
+# VERIFY
 sync_ok = sarea_e > 5 * max(sarea_c, 1e-3)
 cont_ok = carea_e > 5 * max(carea_c, 1e-4)
 ok = sync_ok and cont_ok
 print("=" * 70)
-print("VERIFY - higher-order transitions are explosive in both domains:")
+print("VERIFY: higher-order transitions are explosive in both domains:")
 print(f"  sync:      pairwise hysteresis = {sarea_c:.4f}, higher-order = {sarea_e:.4f} "
       f"-> {'PASS' if sync_ok else 'FAIL'}")
 print(f"  contagion: pairwise hysteresis = {carea_c:.4f}, simplicial   = {carea_e:.4f} "

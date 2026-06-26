@@ -1,7 +1,7 @@
 """
 m5b_kuramoto_on_networks.py
 ===========================
-Module 5b - Kuramoto oscillators on Erdos-Renyi vs Barabasi-Albert networks.
+Module 5b: Kuramoto oscillators on Erdos-Renyi vs Barabasi-Albert networks.
 
 Proof verified:
     When phase oscillators are coupled through a network rather than all-to-all,
@@ -31,7 +31,7 @@ from src.kuramoto import network_rhs, adiabatic_sweep, sample_lorentzian
 np.random.seed(42)
 setup_light_theme()
 
-# ── Networks with matched mean degree ────────────────────────────────────────
+# Networks with matched mean degree
 N = 500
 m = 3
 G_er = er_graph(N, p=2 * m / (N - 1), seed=42)
@@ -53,7 +53,7 @@ def k2_ratio(G):
 
 print(f"<k>/<k^2>: ER={k2_ratio(G_er):.4f}, BA={k2_ratio(G_ba):.4f} (smaller => lower K_c)")
 
-# ── Coupling sweeps ──────────────────────────────────────────────────────────
+# Coupling sweeps
 K_values = np.linspace(0.0, 0.5, 26)
 print("Sweeping ER...")
 r_er = adiabatic_sweep(K_values, omega, network_rhs, extra=(A_er,), T=40, dt=0.02, seed=1)
@@ -75,7 +75,7 @@ def k_at_threshold(K, r, thr=0.5):
 K50_er = k_at_threshold(K_values, r_er)
 K50_ba = k_at_threshold(K_values, r_ba)
 
-# ── Figure ────────────────────────────────────────────────────────────────────
+# Figure
 fig, ax = plt.subplots(figsize=(11, 7))
 fig.patch.set_facecolor("#F8FAFC")
 apply_axes_style(ax)
@@ -90,16 +90,16 @@ ax.annotate(rf'$K_{{50}}^{{ER}}={K50_er:.3f}$', (K50_er, 0.52), color=TEAL, font
 ax.annotate(rf'$K_{{50}}^{{BA}}={K50_ba:.3f}$', (K50_ba, 0.6), color=PURPLE, fontsize=10)
 ax.set_xlabel('Coupling $K$', color=NAVY)
 ax.set_ylabel('Order parameter $r$', color=NAVY)
-ax.set_title('Module 5b - Kuramoto on networks: scale-free topology lowers the sync onset\n'
+ax.set_title('Module 5b: Kuramoto on networks: scale-free topology lowers the sync onset\n'
              rf'$N={N}$, matched $\langle k\rangle\approx{mean_degree(G_ba):.1f}$',
              color=NAVY, fontweight='bold')
 ax.legend(fontsize=11, framealpha=0.95, facecolor='white', edgecolor=SLATE)
 ax.set_ylim(-0.02, 1.0)
 
-# ── VERIFY ────────────────────────────────────────────────────────────────────
+# VERIFY
 ok = K50_ba < K50_er
 print("=" * 70)
-print("VERIFY - synchronisation onset, ER vs BA:")
+print("VERIFY: synchronisation onset, ER vs BA:")
 print(f"  K_50 (r crosses 0.5):  ER = {K50_er:.4f},  BA = {K50_ba:.4f}")
 print(f"  BA onset below ER onset: {'PASS' if ok else 'FAIL'}")
 print("=" * 70)
